@@ -2,7 +2,7 @@ import json
 from collections import namedtuple
 from flask import Flask
 from flask import request
-from condition import condition
+from src import *
 
 app = Flask(__name__)
 
