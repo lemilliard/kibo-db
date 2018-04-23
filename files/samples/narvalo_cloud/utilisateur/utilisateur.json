@@ -1,0 +1,26 @@
+{
+  "_nom": "utilisateur",
+  "_description": "Description de la table utilisateur",
+  "_champs": [
+    {
+      "_nom": "id_utilisateur",
+      "_type": "integer",
+      "_id": true,
+      "_index": "id_utilisateur-index"
+    },
+    {
+      "_nom": "nom",
+      "_type": "string",
+      "_index": "nom-index"
+    },
+    {
+      "_nom": "prenom",
+      "_type": "string",
+      "_index": "prenom-index"
+    },
+    {
+      "_nom": "fichiers",
+      "_type": "fichier[]"
+    }
+  ]
+}

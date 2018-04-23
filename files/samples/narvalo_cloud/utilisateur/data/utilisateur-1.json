@@ -1,0 +1,21 @@
+[
+  {
+    "_type": "utilisateur",
+    "_data": {
+      "id_utilisateur": 1,
+      "nom": "Djo",
+      "prenom": "Le",
+      "fichiers": [
+        {
+          "_type": "fichier",
+          "_data": {
+            "id_fichier": 1,
+            "titre": "J'en veux!!",
+            "partage": []
+          }
+        }
+      ]
+    },
+    "_references": "fichier"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "_nom": "fichier",
+  "_description": "Description de la table fichier",
+  "_champs": [
+    {
+      "_nom": "id_fichier",
+      "_type": "integer",
+      "_id": true
+    },
+    {
+      "_nom": "titre",
+      "_type": "string"
+    },
+    {
+      "_nom": "partage",
+      "_type": "utilisateur[]"
+    }
+  ]
+}
