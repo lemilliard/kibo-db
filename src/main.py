@@ -1,27 +1,23 @@
-import json
-from collections import namedtuple
 from flask import Flask
-from flask import request
-from src import *
+from src.api import api
+from src.client import client
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="client/view")
+app.config['DEBUG'] = True
 
 
-@app.route("/manoucheql", methods=['GET', 'POST', 'PUT', 'DELETE'])
-@app.route("/manoucheql/<bdd>", methods=['GET', 'POST', 'PUT', 'DELETE'])
-@app.route("/manoucheql/<bdd>/<table>", methods=['GET', 'POST', 'PUT', 'DELETE'])
-def get_all(bdd=None, table=None):
-	if bdd is None or table is None:
-		return "Euuuh, il manque un truc"
+@app.route('/api', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/api/<bdd>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/api/<bdd>/<table>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def api_endpoint(p_bdd=None, p_table=None):
+    return api.api_endpoint(p_bdd, p_table)
 
-	o = json.loads(request.data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
 
-	if request.method == 'GET':
-		return "Récupération depuis " + bdd + "." + table
-	elif request.method == 'POST':
-		return condition.build_condition(o)
-	return "T'es con"
+@app.route('/client')
+@app.route('/client/<path:page>')
+def client_endpoint(page=None):
+    return client.client_endpoint(page)
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080)
