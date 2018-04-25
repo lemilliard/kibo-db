@@ -1,7 +1,8 @@
 {
-  "_nom": "fichier",
+  "_name": "fichier",
+  "_system_name": "fichier",
   "_description": "Description de la table fichier",
-  "_champs": [
+  "_fields": [
     {
       "_nom": "id_fichier",
       "_type": "integer",

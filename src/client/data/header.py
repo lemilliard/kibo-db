@@ -1,1 +1,3 @@
-navbar_title = 'ManoucheQL'
+data = {
+    'navbar_title': 'ManoucheQL'
+}

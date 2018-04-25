@@ -1,1 +1,2 @@
-page_name = 'ManoucheQL'
+data = {
+}

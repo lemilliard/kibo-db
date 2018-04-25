@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/client">{{ data.navbar_title }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <input id="toggle-event" type="checkbox" data-toggle="toggle">
+
+    {{ data.night_mode }}
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% for item in data.main_menu %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/client{{ item.path }}">{{ item.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
+
+<script>
+    $(function () {
+        $('#toggle-event').change(function () {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/clientapi/switch_night_mode",
+                success: function () {
+                    location.reload();
+                }
+            })
+        })
+    });
+    $('#toggle-event').bootstrapToggle('on');
+</script>

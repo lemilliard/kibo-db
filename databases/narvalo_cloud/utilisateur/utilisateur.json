@@ -1,25 +1,26 @@
 {
-  "_nom": "utilisateur",
+  "_name": "utilisateur",
+  "_system_name": "utilisateur",
   "_description": "Description de la table utilisateur",
-  "_champs": [
+  "_fields": [
     {
-      "_nom": "id_utilisateur",
+      "_name": "id_utilisateur",
       "_type": "integer",
       "_id": true,
       "_index": "id_utilisateur-index"
     },
     {
-      "_nom": "nom",
+      "_name": "nom",
       "_type": "string",
       "_index": "nom-index"
     },
     {
-      "_nom": "prenom",
+      "_name": "prenom",
       "_type": "string",
       "_index": "prenom-index"
     },
     {
-      "_nom": "fichiers",
+      "_name": "fichiers",
       "_type": "fichier[]"
     }
   ]
