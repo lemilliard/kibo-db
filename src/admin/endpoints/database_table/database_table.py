@@ -5,9 +5,9 @@ from src.admin.admin import get_body
 
 def endpoint(_db_system_name):
     response = "T'es con"
-    if request.method == 'GET':
+    if request.method == "GET":
         response = do_get(_db_system_name)
-    elif request.method == 'POST':
+    elif request.method == "POST":
         response = do_post(_db_system_name)
     return response
 
@@ -22,5 +22,5 @@ def do_post(_db_system_name):
     if body:
         response = body
     else:
-        response = 'No body :o'
+        response = "No body :o"
     return response

@@ -4,12 +4,12 @@
   "_description": "Description de la base de donnees",
   "_tables": [
     {
-      "_name": "utilisateur",
-      "_dir": "utilisateur"
+      "_name": "Utilisateur",
+      "_system_name": "utilisateur"
     },
     {
-      "_name": "fichier",
-      "_dir": "fichier"
+      "_name": "Fichier",
+      "_system_name": "fichier"
     }
   ]
 }

@@ -1,15 +1,17 @@
 from flask import request
+
 from src.admin.utils import *
 from src.admin.admin import get_body
+from src.admin.utils.cleaner import *
 
 
 def endpoint():
-    response = "T'es con"
-    if request.method == 'GET':
-        response = do_get()
-    elif request.method == 'POST':
-        response = do_post()
-    return response
+    _response = "T'es con"
+    if request.method == "GET":
+        _response = do_get()
+    elif request.method == "POST":
+        _response = do_post()
+    return _response
 
 
 def do_get():
@@ -17,10 +19,7 @@ def do_get():
 
 
 def do_post():
-    response = None
-    body = get_body()
-    if body:
-        response = body
-    else:
-        response = 'No body :o'
-    return response
+    _body = get_body()
+    _name = _body["name"]
+    _description = _body["description"]
+    return db_descriptor.create_db_descriptor(_name, _description)

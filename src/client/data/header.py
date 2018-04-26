@@ -1,3 +1,3 @@
 data = {
-    'navbar_title': 'ManoucheQL'
+    "navbar_title": "ManoucheQL"
 }

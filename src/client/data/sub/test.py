@@ -1,4 +1,4 @@
 data = {
-    'page_name': 'Test',
-    'hello': 'Good morning!'
+    "page_name": "Test",
+    "hello": "Good morning!"
 }
