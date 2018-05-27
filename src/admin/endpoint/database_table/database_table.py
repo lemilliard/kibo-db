@@ -13,14 +13,14 @@ def endpoint(_db_system_name):
 
 
 def do_get(_db_system_name):
-    return tb_descriptor.get_tbs_descriptor(_db_system_name)
+    return tb_descriptor_utils.get_tbs_descriptor(_db_system_name)
 
 
 def do_post(_db_system_name):
-    response = None
-    body = get_body()
-    if body:
-        response = body
-    else:
-        response = "No body :o"
-    return response
+    _body = get_body()
+    _name = _body["name"]
+    _description = _body["description"]
+    _db_descriptor = db_descriptor_utils.get_db_descriptor(_db_system_name)
+    _db_descriptor['_tables'].append(_name)
+    db_descriptor_utils.save_db_descriptor(_db_descriptor, _db_system_name)
+

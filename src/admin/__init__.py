@@ -1,3 +1,3 @@
-from . import endpoints
+from . import endpoint
 
-__all__ = ["endpoints"]
+__all__ = ["endpoint"]

@@ -12,7 +12,7 @@ def endpoint(_dt_system_name, _tb_system_name):
 
 
 def do_get(_db_system_name, _tb_system_name):
-    return tb_descriptor.get_tb_descriptor(_db_system_name, _tb_system_name)
+    return tb_descriptor_utils.get_tb_descriptor(_db_system_name, _tb_system_name)
 
 
 def do_put(_dt_system_name, _tb_system_name):

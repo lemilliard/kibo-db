@@ -2,7 +2,7 @@ from flask import request
 
 from src.admin.utils import *
 from src.admin.admin import get_body
-from src.admin.utils.cleaner import *
+from src.admin.utils.cleaner_utils import *
 
 
 def endpoint():
@@ -15,11 +15,11 @@ def endpoint():
 
 
 def do_get():
-    return db_descriptor.get_dbs_descriptor()
+    return db_descriptor_utils.get_dbs_descriptor()
 
 
 def do_post():
     _body = get_body()
     _name = _body["name"]
     _description = _body["description"]
-    return db_descriptor.create_db_descriptor(_name, _description)
+    return db_descriptor_utils.create_db_descriptor(_name, _description)

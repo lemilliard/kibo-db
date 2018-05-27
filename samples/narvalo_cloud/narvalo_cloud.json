@@ -1,15 +1,5 @@
 {
   "_name": "Narvalo Cloud",
   "_system_name": "narvalo_cloud",
-  "_description": "Description de la base de donnees",
-  "_tables": [
-    {
-      "_name": "Utilisateur",
-      "_system_name": "utilisateur"
-    },
-    {
-      "_name": "Fichier",
-      "_system_name": "fichier"
-    }
-  ]
+  "_description": "Description de la base de donnees"
 }

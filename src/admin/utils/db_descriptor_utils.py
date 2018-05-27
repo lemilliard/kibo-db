@@ -4,7 +4,7 @@ import json
 from src.main import files_directory
 from src.main import json_indent
 from src.main import json_separators
-from src.admin.utils.cleaner import *
+from src.admin.utils.cleaner_utils import *
 
 
 def get_db_descriptor(_db_system_name):
@@ -53,28 +53,32 @@ def get_tables_name(_db_system_name):
 
 
 def create_db_descriptor(_name, _description):
-    _db = generate_db(_name, _description)
-    _db_system_name = _db["_system_name"]
+    _db_descriptor = generate_db_descriptor(_name, _description)
+    _db_system_name = _db_descriptor["_system_name"]
     if does_db_exist(_db_system_name):
         return False
     _db_dir = files_directory + "/" + _db_system_name
     os.makedirs(_db_dir)
     _db_file = open(_db_dir + "/" + _db_system_name + ".json", "w")
-    json.dump(_db, _db_file, indent=json_indent, separators=json_separators)
-    return _db
+    json.dump(_db_descriptor, _db_file, indent=json_indent, separators=json_separators)
+    return _db_descriptor
 
 
 def update_db_descriptor(_name, _description, _system_name):
     _db_descriptor = get_db_descriptor(_system_name)
     _db_descriptor["_name"] = _name
     _db_descriptor["_description"] = _description
-    _db_dir = files_directory + "/" + _system_name
-    _db_file = open(_db_dir + "/" + _system_name + ".json", "w")
-    json.dump(_db_descriptor, _db_file, indent=json_indent, separators=json_separators)
+    save_db_descriptor(_db_descriptor, _system_name)
     return _db_descriptor
 
 
-def generate_db(_name, _description, _system_name=None):
+def save_db_descriptor(_db_descriptor, _system_name):
+    _db_dir = files_directory + "/" + _system_name
+    _db_file = open(_db_dir + "/" + _system_name + ".json", "w")
+    json.dump(_db_descriptor, _db_file, indent=json_indent, separators=json_separators)
+
+
+def generate_db_descriptor(_name, _description, _system_name=None):
     _db = dict()
     _clean_name = generate_clean_name(_name)
     _db["_name"] = _clean_name

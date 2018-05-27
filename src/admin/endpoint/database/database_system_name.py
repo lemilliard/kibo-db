@@ -20,7 +20,7 @@ def endpoint(_system_name):
 def do_get(_system_name):
     response = False
     if _system_name is not None:
-        response = db_descriptor.get_db_descriptor(_system_name)
+        response = db_descriptor_utils.get_db_descriptor(_system_name)
     return response
 
 
@@ -28,7 +28,7 @@ def do_put(_system_name):
     _body = get_body()
     _name = _body["name"]
     _description = _body["description"]
-    return db_descriptor.update_db_descriptor(_name, _description, _system_name)
+    return db_descriptor_utils.update_db_descriptor(_name, _description, _system_name)
 
 
 def do_delete(_system_name):
@@ -39,7 +39,7 @@ def do_delete(_system_name):
 
 
 def delete_db(_system_name):
-    if db_descriptor.does_db_exist(_system_name):
+    if db_descriptor_utils.does_db_exist(_system_name):
         shutil.rmtree(files_directory + "/" + _system_name)
         return True
     return False
