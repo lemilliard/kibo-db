@@ -20,7 +20,4 @@ def do_post(_db_system_name):
     _body = get_body()
     _name = _body["name"]
     _description = _body["description"]
-    _db_descriptor = db_descriptor_utils.get_db_descriptor(_db_system_name)
-    _db_descriptor['_tables'].append(_name)
-    db_descriptor_utils.save_db_descriptor(_db_descriptor, _db_system_name)
-
+    return tb_descriptor_utils.create_tb_descriptor(_db_system_name, _name, _description)

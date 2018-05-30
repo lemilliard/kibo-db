@@ -87,5 +87,4 @@ def generate_db_descriptor(_name, _description, _system_name=None):
         _db["_system_name"] = generate_system_name(_clean_name)
     else:
         _db["_system_name"] = _system_name
-    _db["_tables"] = []
     return _db

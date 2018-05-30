@@ -4,6 +4,7 @@ from flask import request
 from src.main import files_directory
 from src.admin.utils import *
 from src.admin.admin import get_body
+from src.admin.utils.database_utils import DatabaseUtils
 
 
 def endpoint(_system_name):
@@ -18,10 +19,7 @@ def endpoint(_system_name):
 
 
 def do_get(_system_name):
-    response = False
-    if _system_name is not None:
-        response = db_descriptor_utils.get_db_descriptor(_system_name)
-    return response
+    return DatabaseUtils.get_database_descriptor(_system_name).__dict__
 
 
 def do_put(_system_name):
@@ -32,10 +30,7 @@ def do_put(_system_name):
 
 
 def do_delete(_system_name):
-    _response = None
-    if _system_name is not None:
-        _response = delete_db(_system_name)
-    return _response
+    return DatabaseUtils.delete_database(_system_name)
 
 
 def delete_db(_system_name):

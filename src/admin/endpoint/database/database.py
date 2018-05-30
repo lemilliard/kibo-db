@@ -1,8 +1,7 @@
 from flask import request
 
-from src.admin.utils import *
+from src.admin.utils.database_utils import DatabaseUtils
 from src.admin.admin import get_body
-from src.admin.utils.cleaner_utils import *
 
 
 def endpoint():
@@ -15,11 +14,18 @@ def endpoint():
 
 
 def do_get():
-    return db_descriptor_utils.get_dbs_descriptor()
+    _descriptor_dicts = []
+    _descriptors = DatabaseUtils.get_databases_descriptor()
+    for _descriptor in _descriptors:
+        _descriptor_dicts.append(_descriptor.__dict__)
+    return _descriptor_dicts
 
 
 def do_post():
     _body = get_body()
     _name = _body["name"]
     _description = _body["description"]
-    return db_descriptor_utils.create_db_descriptor(_name, _description)
+    _database = DatabaseUtils.create_database(_name, _description)
+    if _database is not False:
+        _database = _database.__dict__
+    return _database
