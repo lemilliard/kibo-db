@@ -1,4 +1,4 @@
-from src.admin.utils.db_descriptor_utils import get_dbs_descriptor
+from src.admin.utils import get_dbs_descriptor
 
 data = {
     "page_name": "Home",

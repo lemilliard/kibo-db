@@ -1,7 +1,6 @@
 import os
 import json
 
-from src.main import files_directory
 from src.admin.utils.cleaner_utils import generate_system_name
 
 

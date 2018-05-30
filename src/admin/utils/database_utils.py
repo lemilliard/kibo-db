@@ -1,7 +1,6 @@
 import os
 import shutil
 
-from src.main import files_directory
 from src.admin.model.database import Database
 from src.admin.model.descriptor.database_descriptor import DatabaseDescriptor
 
