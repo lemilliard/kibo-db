@@ -1,23 +1,23 @@
 from flask import request
 
-# from src.admin.admin import get_body
+from . import endpoint
 from src.admin.utils.table_utils import TableUtils
 
 
-class TableEndpoint(object):
+class TableEndpoint(endpoint.Endpoint):
 
     @staticmethod
     def process_request(_db_system_name: str, _tb_system_name: str = None):
-        response = "T'es con"
+        _response = "T'es con"
         if request.method == "GET":
-            response = TableEndpoint.do_get(_db_system_name, _tb_system_name)
+            _response = TableEndpoint.do_get(_db_system_name, _tb_system_name)
         elif request.method == "POST":
-            response = TableEndpoint.do_post(_db_system_name)
+            _response = TableEndpoint.do_post(_db_system_name)
         elif request.method == "PUT":
             _response = TableEndpoint.do_put(_db_system_name)
         elif request.method == "DELETE":
             _response = TableEndpoint.do_delete(_db_system_name, _tb_system_name)
-        return response
+        return _response
 
     @staticmethod
     def do_get(_db_system_name: str, _tb_system_name: str):
@@ -29,18 +29,34 @@ class TableEndpoint(object):
                 _descriptor_dicts.append(_descriptor.__dict__)
                 _response = _descriptor_dicts
         else:
-            _response = TableUtils.get_table_descriptor(_db_system_name, _tb_system_name).__dict__
+            _descriptor = TableUtils.get_table_descriptor(_db_system_name, _tb_system_name)
+            if _descriptor is not False:
+                _response = _descriptor.__dict__
         return _response
 
     @staticmethod
     def do_post(_db_system_name):
+        _response = False
         _body = TableEndpoint.get_body()
         _name = _body["name"]
         _description = _body["description"]
-        # return tb_descriptor_utils.create_tb_descriptor(_db_system_name, _name, _description)
+        _table = TableUtils.create_table(_db_system_name, _name, _description)
+        if _table is not False:
+            _response = _table.__dict__
+        return _response
 
     @staticmethod
-    def get_body():
-        if request.json is None:
-            return False
-        return request.json
+    def do_put(_db_system_name: str):
+        _response = False
+        _body = TableEndpoint.get_body()
+        _name = _body["name"]
+        _description = _body["description"]
+        _tb_system_name = _body["_system_name"]
+        _table = TableUtils.update_table(_db_system_name, _tb_system_name, _name, _description)
+        if _table is not False:
+            _response = _table.__dict__
+        return _response
+
+    @staticmethod
+    def do_delete(_db_system_name: str, _tb_system_name: str):
+        return TableUtils.delete_table(_db_system_name, _tb_system_name)

@@ -1,9 +1,10 @@
 from flask import request
 
+from . import endpoint
 from src.admin.utils.database_utils import DatabaseUtils
 
 
-class DatabaseEndpoint(object):
+class DatabaseEndpoint(endpoint.Endpoint):
 
     @staticmethod
     def process_request(_db_system_name: str = None):
@@ -28,34 +29,34 @@ class DatabaseEndpoint(object):
                 _descriptor_dicts.append(_descriptor.__dict__)
                 _response = _descriptor_dicts
         else:
-            _response = DatabaseUtils.get_database_descriptor(_db_system_name).__dict__
+            _descriptor = DatabaseUtils.get_database_descriptor(_db_system_name)
+            if _descriptor is not False:
+                _response = _descriptor.__dict__
         return _response
 
     @staticmethod
     def do_post():
+        _response = False
         _body = DatabaseEndpoint.get_body()
         _name = _body["name"]
         _description = _body["description"]
         _database = DatabaseUtils.create_database(_name, _description)
         if _database is not False:
-            _database = _database.__dict__
-        return _database
+            _response = _database.__dict__
+        return _response
 
     @staticmethod
     def do_put():
+        _response = False
         _body = DatabaseEndpoint.get_body()
         _name = _body["name"]
         _description = _body["description"]
         _system_name = _body["_system_name"]
-        return True
-        # return db_descriptor_utils.update_db_descriptor(_name, _description, _system_name)
+        _database = DatabaseUtils.update_database(_system_name, _name, _description)
+        if _database is not False:
+            _response = _database.__dict__
+        return _response
 
     @staticmethod
-    def do_delete(_db_system_name: str = None):
+    def do_delete(_db_system_name: str):
         return DatabaseUtils.delete_database(_db_system_name)
-
-    @staticmethod
-    def get_body():
-        if request.json is None:
-            return False
-        return request.json

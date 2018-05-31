@@ -1,28 +1,21 @@
 import os
 import json
 
-from src.admin.utils.cleaner_utils import generate_system_name
+from src.config import Config
+from . import descriptor
 
 
-class TableDescriptor:
+class TableDescriptor(descriptor.Descriptor):
 
     def __init__(self, *args, **kwargs):
-        self._name = kwargs.get("name")
-        self._description = kwargs.get("description")
-        self._system_name = kwargs.get("system_name", generate_system_name(self._name))
+        super().__init__(*args, **kwargs)
         self._fields = kwargs.get("fields", [])
-
-    def get_name(self):
-        return self._name
-
-    def get_description(self):
-        return self._description
-
-    def get_system_name(self):
-        return self._system_name
 
     def get_fields(self):
         return self._fields
+
+    def set_fields(self, fields):
+        self._fields = fields
 
     @staticmethod
     def from_file(file_path: str):
@@ -38,13 +31,15 @@ class TableDescriptor:
             fields=_fields
         )
 
-    def to_file(self, _db_system_name):
-        os.makedirs(self.get_dir_path(_db_system_name))
+    def save_file(self, _db_system_name: str):
+        _dir_path = self.get_dir_path(_db_system_name)
+        if not os.path.exists(_dir_path):
+            os.makedirs(_dir_path)
         file = open(self.get_file_path(_db_system_name), "w")
-        json.dump(self.__dict__, file)
+        json.dump(self.__dict__, file, indent=Config.json_indent, separators=Config.json_separators)
 
     def get_dir_path(self, _db_system_name):
-        return files_directory + "/" + _db_system_name + "/" + self._system_name
+        return Config.files_directory + "/" + _db_system_name + "/" + self._system_name
 
     def get_file_path(self, _db_system_name):
         return self.get_dir_path(_db_system_name) + "/" + self._system_name + ".json"

@@ -5,14 +5,14 @@ class Table(object):
 
     def __init__(self, *args, **kwargs):
         if kwargs.get("descriptor") is not None:
-            self.descriptor = kwargs.get("descriptor")
+            self.descriptor: TableDescriptor = kwargs.get("descriptor")
         elif kwargs.get("name") is not None and kwargs.get("description") is not None:
-            self.descriptor = TableDescriptor(
+            self.descriptor: TableDescriptor = TableDescriptor(
                 name=kwargs.get("name"),
                 description=kwargs.get("description")
             )
         else:
-            self.descriptor = None
+            self.descriptor: TableDescriptor = None
         self.db_system_name = kwargs.get("db_system_name")
 
     def get_descriptor(self) -> TableDescriptor:
@@ -23,11 +23,15 @@ class Table(object):
 
     @staticmethod
     def from_descriptor(_descriptor: TableDescriptor):
-        return Table(descriptor=_descriptor)
+        return Table(
+            descriptor=_descriptor
+        )
 
     @staticmethod
     def from_file(_file_path: str):
-        return Table(descriptor=TableDescriptor.from_file(_file_path))
+        return Table(
+            descriptor=TableDescriptor.from_file(_file_path)
+        )
 
-    def to_file(self):
-        self.descriptor.to_file()
+    def save_file(self, _db_system_name: str):
+        self.descriptor.save_file(_db_system_name)

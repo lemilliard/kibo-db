@@ -2,10 +2,6 @@ from flask import Flask
 from src.admin.admin import app_admin
 from src.client.client_api import client_api
 
-files_directory = "../databases"
-json_separators = None
-json_indent = 4
-
 app = Flask(__name__, template_folder="client/view")
 app.config["DEBUG"] = True
 app.register_blueprint(app_admin, url_prefix="/admin")
