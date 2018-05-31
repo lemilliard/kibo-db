@@ -3,6 +3,7 @@ from src.admin.admin import app_admin
 from src.client.client_api import client_api
 
 app = Flask(__name__, template_folder="client/view")
+app.static_folder = 'client/static'
 app.config["DEBUG"] = True
 app.register_blueprint(app_admin, url_prefix="/admin")
 app.register_blueprint(client_api, url_prefix="/client")

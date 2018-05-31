@@ -1,5 +1,5 @@
 def get_page_name(page_name):
-    return data["base_page_name"] + " - " + page_name
+    return page_name + " - " + data["base_page_name"]
 
 
 def switch_night_mode():
@@ -11,7 +11,8 @@ data = {
     "base_page_name": "ManoucheQL",
     "main_menu": [
         {"name": "Home", "path": "/home"},
-        {"name": "Test", "path": "/sub/test"}
+        {"name": "Databases", "path": "/database"},
+        {"name": "Test", "path": "/sub/test"},
     ],
     "night_mode": False,
     "current_page": ""

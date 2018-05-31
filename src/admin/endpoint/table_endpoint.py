@@ -40,9 +40,9 @@ class TableEndpoint(endpoint.Endpoint):
         _body = TableEndpoint.get_body()
         _name = _body["name"]
         _description = _body["description"]
-        _table = TableUtils.create_table(_db_system_name, _name, _description)
-        if _table is not False:
-            _response = _table.__dict__
+        _descriptor = TableUtils.create_table(_db_system_name, _name, _description)
+        if _descriptor is not False:
+            _response = _descriptor.__dict__
         return _response
 
     @staticmethod
@@ -52,9 +52,9 @@ class TableEndpoint(endpoint.Endpoint):
         _name = _body["name"]
         _description = _body["description"]
         _tb_system_name = _body["_system_name"]
-        _table = TableUtils.update_table(_db_system_name, _tb_system_name, _name, _description)
-        if _table is not False:
-            _response = _table.__dict__
+        _descriptor = TableUtils.update_table(_db_system_name, _tb_system_name, _name, _description)
+        if _descriptor is not False:
+            _response = _descriptor.__dict__
         return _response
 
     @staticmethod

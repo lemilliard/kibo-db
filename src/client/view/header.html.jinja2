@@ -1,13 +1,12 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="navbar navbar-expand-lg {{ 'navbar-dark bg-dark' if data.night_mode else 'navbar-light bg-light' }}">
     <a class="navbar-brand" href="/client">{{ data.navbar_title }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <input id="toggle-event" type="checkbox" data-toggle="toggle">
-
-    {{ data.night_mode }}
+    <input id="night_mode" type="checkbox" data-toggle="toggle" data-on="Dark"
+           data-off="Light" {{ 'checked' if data.night_mode else '' }}>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
@@ -18,19 +17,19 @@
             {% endfor %}
         </ul>
     </div>
-</nav>
+</div>
 
 <script>
     $(function () {
-        $('#toggle-event').change(function () {
-            $.ajax({
-                type: "GET",
-                url: "http://localhost:8080/clientapi/switch_night_mode",
-                success: function () {
-                    location.reload();
-                }
-            })
-        })
+        $('#night_mode')
+            .change(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "http://localhost:8080/client/api/switch_night_mode",
+                    success: function () {
+                        location.reload();
+                    }
+                })
+            });
     });
-    $('#toggle-event').bootstrapToggle('on');
 </script>

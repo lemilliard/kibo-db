@@ -40,9 +40,9 @@ class DatabaseEndpoint(endpoint.Endpoint):
         _body = DatabaseEndpoint.get_body()
         _name = _body["name"]
         _description = _body["description"]
-        _database = DatabaseUtils.create_database(_name, _description)
-        if _database is not False:
-            _response = _database.__dict__
+        _descriptor = DatabaseUtils.create_database(_name, _description)
+        if _descriptor is not False:
+            _response = _descriptor.__dict__
         return _response
 
     @staticmethod
@@ -52,9 +52,9 @@ class DatabaseEndpoint(endpoint.Endpoint):
         _name = _body["name"]
         _description = _body["description"]
         _system_name = _body["_system_name"]
-        _database = DatabaseUtils.update_database(_system_name, _name, _description)
-        if _database is not False:
-            _response = _database.__dict__
+        _descriptor = DatabaseUtils.update_database(_system_name, _name, _description)
+        if _descriptor is not False:
+            _response = _descriptor.__dict__
         return _response
 
     @staticmethod
