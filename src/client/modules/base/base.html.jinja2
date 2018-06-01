@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}">
+{#    <link rel="stylesheet" href="{{ url_for('static', filename=methods.get_style_file('base')) }}">#}
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
             integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
@@ -16,18 +16,18 @@
             crossorigin="anonymous"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-    <title>{{ methods.get_page_name(data.page_name) }}</title>
+    <title>{{ methods.get_page_name(data.page_name) if 'page_name' in data else data.base_page_name }}</title>
 </head>
 
 <body>
 <header>
-    {% include 'header.html.jinja2' %}
+    {% include 'header/header.html.jinja2' %}
 </header>
 <main role="main">
-    {% include 'pages/' + page %}
+    {% include html %}
 </main>
 <footer>
-    {% include 'footer.html.jinja2' %}
+    {% include 'footer/footer.html.jinja2' %}
 </footer>
 </body>
 </html>

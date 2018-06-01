@@ -1,7 +1,7 @@
 from flask import Blueprint
 
 from . import client
-from .data import base
+from .modules.base import base
 
 client_api = Blueprint("client_api", __name__)
 

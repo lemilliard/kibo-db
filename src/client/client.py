@@ -6,8 +6,9 @@ from flask import render_template
 
 from . import router
 
-pages_dir = "pages"
-common_modules = ["config", "base", "header", "footer"]
+modules_dir = "./client/modules"
+modules_package = "src.client.modules"
+common_modules = ["base", "header", "footer"]
 
 
 def client_endpoint(url=None):
@@ -18,65 +19,84 @@ def client_endpoint(url=None):
     else:
         route = router.get_default_route()
 
-    module = route["module"]
-    page = module + ".html.jinja2"
-    if os.path.exists("../src/client/view/pages/" + page):
-        methods = get_methods(module)
-        execute_on_open(module, methods)
-        data = get_data(module)
-        return render_template(
-            "base.html.jinja2",
-            module=module,
-            page=page,
-            data=data,
-            methods=methods,
-            params=url_params
-        )
-    return "Page does not exist"
+    module_full_name = route["module"]
+    html = module_full_name + "/" + get_module_name(module_full_name) + ".html.jinja2"
+    if not is_module_valid(html):
+        route = router.get_default_route()
+        module_full_name = route["module"]
+        html = module_full_name + "/" + get_module_name(module_full_name) + ".html.jinja2"
+
+    module_controller = get_module_controller(module_full_name)
+    module_full_controller = get_full_module_controller(module_controller)
+
+    execute_on_open(module_full_controller)
+    methods = module_full_controller["methods"]
+    data = module_full_controller["data"]
+
+    return render_template(
+        "base/base.html.jinja2",
+        module_name=module_full_name,
+        html=html,
+        data=data,
+        methods=methods,
+        params=url_params
+    )
 
 
-def get_data(p_module):
-    data = dict()
-    for module in common_modules:
-        data_module = get_data_module(module)
-        if data_module is not False and hasattr(data_module, "data"):
-            data.update(data_module.data)
-    page_data = get_data_module(pages_dir + "/" + p_module)
-    if page_data is not False and hasattr(page_data, "data"):
-        data.update(page_data.data)
-    return data
+def get_full_module_controller(module_controller):
+    module_full_controller = dict()
+    if module_controller is not None:
+        module_full_controller = module_controller.__dict__
 
+    if not hasattr(module_controller, "data"):
+        module_full_controller["data"] = dict()
+    if not hasattr(module_controller, "methods"):
+        module_full_controller["methods"] = dict()
+    if not hasattr(module_controller, "on_open"):
+        module_full_controller["on_open"] = []
 
-def get_methods(p_module):
-    methods = dict()
-    for module in common_modules:
-        data_module = get_data_module(module)
-        if data_module is not False and hasattr(data_module, "methods"):
-            methods.update(data_module.methods)
-    page_data = get_data_module(pages_dir + "/" + p_module)
-    if page_data is not False and hasattr(page_data, "methods"):
-        methods.update(page_data.methods)
-    return methods
-
-
-def get_data_module(p_page=None):
-    if p_page is not None:
-        module_name = p_page.replace("/", ".")
-        module_name = "." + module_name
-        if importlib.util.find_spec(module_name, "src.client.data"):
-            return importlib.import_module(module_name, "src.client.data")
-    return False
-
-
-def execute_on_open(module, methods: dict):
-    on_open_methods = []
     for common_module in common_modules:
-        on_open_module = get_data_module(common_module)
-        if on_open_module is not False and hasattr(on_open_module, "on_open"):
-            on_open_methods += on_open_module.on_open
-    on_open_module = get_data_module(pages_dir + "/" + module)
-    if on_open_module is not False and hasattr(on_open_module, "methods"):
-        on_open_methods += on_open_module.on_open
-    for on_open_method in on_open_methods:
-        if on_open_method in methods:
-            methods[on_open_method]()
+        common_module_controller = get_module_controller(common_module)
+        if hasattr(common_module_controller, "data"):
+            module_full_controller["data"].update(common_module_controller.data)
+
+        if hasattr(common_module_controller, "methods"):
+            module_full_controller["methods"].update(common_module_controller.methods)
+    return module_full_controller
+
+
+def get_module_controller(module_full_name):
+    module_controller = None
+    if does_module_exist(module_full_name):
+        module_name = module_full_name.replace("/", ".")
+        module_name = "." + module_name
+        module_simple_name = get_module_name(module_full_name)
+        module_simple_name = "." + module_simple_name
+        if importlib.util.find_spec(module_simple_name, modules_package + module_name):
+            module_controller = importlib.import_module(module_simple_name, modules_package + module_name)
+    return module_controller
+
+
+def execute_on_open(module_controller):
+    for on_open_method in module_controller["on_open"]:
+        if on_open_method in module_controller["methods"]:
+            module_controller["methods"][on_open_method]()
+
+
+def does_module_exist(module) -> bool:
+    exist = False
+    if os.path.isdir("../src/client/modules/" + module):
+        exist = True
+    return exist
+
+
+def is_module_valid(html) -> bool:
+    valid = False
+    if os.path.exists(os.path.join(modules_dir, html)):
+        valid = True
+    return valid
+
+
+def get_module_name(module_full_name):
+    module_full_name_parts = module_full_name.split("/")
+    return module_full_name_parts[len(module_full_name_parts) - 1]
