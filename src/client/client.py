@@ -21,8 +21,9 @@ def client_endpoint(url=None):
     module = route["module"]
     page = module + ".html.jinja2"
     if os.path.exists("../src/client/view/pages/" + page):
-        data = get_data(module)
         methods = get_methods(module)
+        execute_on_open(module, methods)
+        data = get_data(module)
         return render_template(
             "base.html.jinja2",
             module=module,
@@ -65,3 +66,17 @@ def get_data_module(p_page=None):
         if importlib.util.find_spec(module_name, "src.client.data"):
             return importlib.import_module(module_name, "src.client.data")
     return False
+
+
+def execute_on_open(module, methods: dict):
+    on_open_methods = []
+    for common_module in common_modules:
+        on_open_module = get_data_module(common_module)
+        if on_open_module is not False and hasattr(on_open_module, "on_open"):
+            on_open_methods += on_open_module.on_open
+    on_open_module = get_data_module(pages_dir + "/" + module)
+    if on_open_module is not False and hasattr(on_open_module, "methods"):
+        on_open_methods += on_open_module.on_open
+    for on_open_method in on_open_methods:
+        if on_open_method in methods:
+            methods[on_open_method]()

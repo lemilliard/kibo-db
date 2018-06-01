@@ -2,11 +2,11 @@ from src.admin.utils.database_utils import DatabaseUtils
 
 
 def get_databases():
-    databases = []
+    data["databases"] = []
     descriptors = DatabaseUtils.get_databases_descriptor()
     for descriptor in descriptors:
-        databases.append(descriptor.__dict__)
-    return databases
+        data["databases"].append(descriptor.__dict__)
+    return data["databases"]
 
 
 def get_database(_system_name: str):
@@ -18,9 +18,14 @@ def get_database(_system_name: str):
 
 data = {
     "page_name": "Databases",
-    "databases": get_databases()
+    "databases": []
 }
 
 methods = {
+    "get_databases": get_databases,
     "get_database": get_database
 }
+
+on_open = [
+    "get_databases"
+]
