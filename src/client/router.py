@@ -2,9 +2,8 @@ import re
 
 routes = [
     {"name": "Home", "path": "home", "module": "home"},
-    {"name": "Databases", "path": "database", "module": "database/databases"},
-    {"name": "Database", "path": "database/{system_name}", "module": "database/database"},
-    {"name": "Test", "path": "sub/test", "module": "test"},
+    {"name": "Databases", "path": "databases", "module": "database/databases"},
+    {"name": "Database", "path": "database/{system_name}", "module": "database/database"}
 ]
 
 
