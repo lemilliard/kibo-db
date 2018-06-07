@@ -2,7 +2,7 @@
 
 echo "You're running ManoucheQL's client CLI"
 
-MODULE_PATH="./src/client/modules"
+MODULE_PATH="./src/client_old/modules"
 
 PY_EXTENSION="py"
 

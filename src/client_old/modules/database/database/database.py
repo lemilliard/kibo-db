@@ -13,7 +13,8 @@ data = {
 }
 
 methods = {
-    "get_database": get_database
+    "get_database": get_database,
+    "create_database": DatabaseUtils.create_database
 }
 
 on_open = [

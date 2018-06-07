@@ -1,5 +1,5 @@
 <div class="navbar navbar-expand-lg {{ 'navbar-dark bg-dark' if data.night_mode else 'navbar-light bg-light' }}">
-    <a class="navbar-brand" href="/client">{{ data.navbar_title }}</a>
+    <a class="navbar-brand" href="/client_old">{{ data.navbar_title }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -12,7 +12,7 @@
         <ul class="navbar-nav mr-auto">
             {% for item in data.main_menu %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/client{{ item.path }}">{{ item.name }}</a>
+                    <a class="nav-link" href="/client_old{{ item.path }}">{{ item.name }}</a>
                 </li>
             {% endfor %}
         </ul>
@@ -25,7 +25,7 @@
             .change(function () {
                 $.ajax({
                     type: "GET",
-                    url: "http://localhost:8080/client/api/switch_night_mode",
+                    url: "http://localhost:8080/client_old/api/switch_night_mode",
                     success: function () {
                         location.reload();
                     }

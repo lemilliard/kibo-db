@@ -6,8 +6,8 @@ from flask import render_template
 
 from . import router
 
-modules_dir = "./client/modules"
-modules_package = "src.client.modules"
+modules_dir = "./client_old/modules"
+modules_package = "src.client_old.modules"
 common_modules = ["base", "header", "footer"]
 
 
@@ -19,12 +19,12 @@ def client_endpoint(url=None):
     else:
         route = router.get_default_route()
 
-    module_full_name = route["module"]
-    html = module_full_name + "/" + get_module_name(module_full_name) + ".html.jinja2"
-    if not is_module_valid(html):
+    if not is_route_valid(route):
         route = router.get_default_route()
-        module_full_name = route["module"]
-        html = module_full_name + "/" + get_module_name(module_full_name) + ".html.jinja2"
+
+    module_full_name = route["module"]
+    module_path = module_full_name + "/" + get_module_name(module_full_name)
+    html = module_path + ".html.jinja2"
 
     module_controller = get_module_controller(module_full_name)
     module_full_controller = get_full_module_controller(module_controller)
@@ -35,7 +35,7 @@ def client_endpoint(url=None):
 
     return render_template(
         "base/base.html.jinja2",
-        module_name=module_full_name,
+        module_list=common_modules + [module_full_name],
         html=html,
         data=data,
         methods=methods,
@@ -85,14 +85,17 @@ def execute_on_open(module_controller):
 
 def does_module_exist(module) -> bool:
     exist = False
-    if os.path.isdir("../src/client/modules/" + module):
+    if os.path.isdir("../src/client_old/modules/" + module):
         exist = True
     return exist
 
 
-def is_module_valid(html) -> bool:
+def is_route_valid(route) -> bool:
     valid = False
-    if os.path.exists(os.path.join(modules_dir, html)):
+    module_path = route["module"] + "/" + get_module_name(route["module"])
+    html = module_path + ".html.jinja2"
+    py = module_path + ".py"
+    if os.path.exists(os.path.join(modules_dir, html)) and os.path.exists(os.path.join(modules_dir, py)):
         valid = True
     return valid
 
