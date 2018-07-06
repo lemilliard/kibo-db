@@ -1,7 +1,7 @@
 from flask import request
 
 from . import endpoint
-from src.admin.utils.database_utils import DatabaseUtils
+from src.admin_api.utils.database_utils import DatabaseUtils
 
 
 class DatabaseEndpoint(endpoint.Endpoint):

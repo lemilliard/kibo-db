@@ -2,8 +2,8 @@ import os
 import shutil
 
 from src.config import Config
-from src.admin.model.database import Database
-from src.admin.model.descriptor.database_descriptor import DatabaseDescriptor
+from src.admin_api.model.database import Database
+from src.admin_api.model.descriptor.database_descriptor import DatabaseDescriptor
 
 
 class DatabaseUtils(object):

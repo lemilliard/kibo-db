@@ -18,8 +18,8 @@ class TableDescriptor(descriptor.Descriptor):
         self._fields = fields
 
     @staticmethod
-    def from_file(file_path: str):
-        json_object = json.load(open(file_path))
+    def from_file(_file_path: str):
+        json_object = json.load(open(_file_path))
         _name = json_object["_name"]
         _description = json_object["_description"]
         _system_name = json_object["_system_name"]
