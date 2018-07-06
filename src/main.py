@@ -1,10 +1,11 @@
 from flask import Flask
-from src.admin.admin import app_admin
+from src.admin_api.main import admin_api
+from src.query_api.main import query_api
 
-app = Flask(__name__, template_folder="client_old/modules")
-app.static_folder = 'client_old/modules'
+app = Flask(__name__)
 app.config["DEBUG"] = True
-app.register_blueprint(app_admin, url_prefix="/admin")
+app.register_blueprint(admin_api, url_prefix="/admin")
+app.register_blueprint(query_api, url_prefix="/query")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8081)
+    app.run(host="0.0.0.0", port=8500)

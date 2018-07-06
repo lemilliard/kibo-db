@@ -2,8 +2,8 @@ import os
 import shutil
 
 from src.config import Config
-from src.admin.model.table import Table
-from src.admin.model.descriptor.table_descriptor import TableDescriptor
+from src.admin_api.model.table import Table
+from src.admin_api.model.descriptor.table_descriptor import TableDescriptor
 
 
 class TableUtils(object):
@@ -13,14 +13,14 @@ class TableUtils(object):
         if not TableUtils.table_exists(_db_system_name, _tb_system_name):
             return False
         _file_path = Config.files_directory + "/" + _db_system_name + "/" + _tb_system_name + "/" + _tb_system_name + ".json"
-        return TableDescriptor.from_file(file_path=_file_path)
+        return TableDescriptor.from_file(_file_path=_file_path)
 
     @staticmethod
     def get_tables_descriptor(_db_system_name: str) -> list:
         _descriptors = []
         for _dir_name in TableUtils.get_table_dir_names(_db_system_name):
             _file_path = Config.files_directory + "/" + _db_system_name + "/" + _dir_name + "/" + _dir_name + ".json"
-            _descriptor = TableDescriptor.from_file(file_path=_file_path)
+            _descriptor = TableDescriptor.from_file(_file_path=_file_path)
             _descriptors.append(_descriptor)
         return _descriptors
 
@@ -55,7 +55,7 @@ class TableUtils(object):
         )
         if TableUtils.table_exists(_db_system_name, _table.get_descriptor().get_system_name()):
             return False
-        _table.save_file(_db_system_name)
+        _table.save_file()
         return _table.get_descriptor()
 
     @staticmethod

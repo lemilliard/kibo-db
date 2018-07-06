@@ -1,7 +1,7 @@
 from flask import request
 
 from . import endpoint
-from src.admin.utils.table_utils import TableUtils
+from src.admin_api.utils.table_utils import TableUtils
 
 
 class TableEndpoint(endpoint.Endpoint):
