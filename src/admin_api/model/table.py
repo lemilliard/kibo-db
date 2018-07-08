@@ -83,9 +83,9 @@ class Table(Descriptor):
             _index_path = self.get_index_dir_path(_db_system_name)
             if not os.path.exists(_index_path):
                 os.makedirs(_index_path)
-            file = open(self.get_file_path(_db_system_name), "w")
-            json.dump(self.to_dict(), file, indent=Config.json_indent, separators=Config.json_separators)
-            file.close()
+            _file = open(self.get_file_path(_db_system_name), "w")
+            json.dump(self.to_dict(), _file, indent=Config.json_indent, separators=Config.json_separators)
+            _file.close()
             for _field in self._fields:
                 _field.save(_db_system_name, self._system_name)
 

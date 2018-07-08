@@ -39,17 +39,14 @@ def init():
                 "id": True,
                 "name": "ID User",
                 "type": "integer"
-
             },
             {
                 "name": "Username",
                 "type": "string"
-
             },
             {
                 "name": "Password",
                 "type": "password"
-
             }
         ]
     }
