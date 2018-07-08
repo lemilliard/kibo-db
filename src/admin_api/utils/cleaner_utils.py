@@ -14,6 +14,6 @@ class CleanerUtils(object):
 
     @staticmethod
     def generate_system_name(_clean_name):
-        _db_system_name = _clean_name.lower()
-        _db_system_name = _db_system_name.replace(" ", "_")
-        return _db_system_name
+        _system_name = _clean_name.lower()
+        _system_name = _system_name.replace(" ", "_")
+        return _system_name
