@@ -29,12 +29,12 @@ class FieldEndpoint(endpoint.Endpoint):
             if _fd_system_name is None:
                 _fields = []
                 for _field in _descriptor.get_fields():
-                    _fields.append(_field.to_json_object())
+                    _fields.append(_field.to_dict())
                 _response = _fields
             else:
                 _field = _descriptor.get_field_by_system_name(_fd_system_name)
                 if _field is not None:
-                    _response = _field.to_json_object()
+                    _response = _field.to_dict()
         return _response
 
     @staticmethod
@@ -58,7 +58,7 @@ class FieldEndpoint(endpoint.Endpoint):
                     )
                     _descriptor.add_field(_field)
                     _descriptor.save(_db_system_name)
-                    _response = _field.to_json_object()
+                    _response = _field.to_dict()
         return _response
 
     @staticmethod
@@ -83,7 +83,7 @@ class FieldEndpoint(endpoint.Endpoint):
                     if _type is not None:
                         _field.set_type(_type)
                     if _descriptor.update_field(_field):
-                        _response = _field.to_json_object()
+                        _response = _field.to_dict()
                         _descriptor.save(_db_system_name)
         return _response
 

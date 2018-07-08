@@ -46,13 +46,13 @@ class Field(Descriptor):
             file.close()
 
     @staticmethod
-    def from_json_object(json_object: dict):
-        _id = json_object["id"]
-        _name = json_object["name"]
-        _description = json_object["description"]
-        _system_name = json_object["system_name"]
-        _type = json_object["type"]
-        _index = json_object["index"]
+    def from_json(_json: dict):
+        _id = _json.get("id", False)
+        _name = _json.get("name", None)
+        _description = _json.get("description", None)
+        _system_name = _json.get("system_name", None)
+        _type = _json.get("type", "string")
+        _index = _json.get("index", None)
         return Field(
             id=_id,
             name=_name,
@@ -62,12 +62,9 @@ class Field(Descriptor):
             index=_index
         )
 
-    def to_json_object(self):
-        _json_object = dict()
-        _json_object["id"] = self._id
-        _json_object["name"] = self._name
-        _json_object["description"] = self._description
-        _json_object["system_name"] = self._system_name
-        _json_object["type"] = self._type
-        _json_object["index"] = self._index
-        return _json_object
+    def to_dict(self, _with_details: bool = False):
+        _dict = super().to_dict()
+        _dict["id"] = self._id
+        _dict["type"] = self._type
+        _dict["index"] = self._index
+        return _dict

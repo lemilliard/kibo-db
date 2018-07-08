@@ -27,12 +27,12 @@ class DatabaseEndpoint(endpoint.Endpoint):
             _descriptor_dicts = []
             _descriptors = DescriptorUtils.get_dbs_descriptor()
             for _descriptor in _descriptors:
-                _descriptor_dicts.append(_descriptor.to_json_object())
+                _descriptor_dicts.append(_descriptor.to_dict())
             _response = _descriptor_dicts
         else:
             _descriptor = DescriptorUtils.get_db_descriptor_by_system_name(_db_system_name)
             if _descriptor is not None:
-                _response = _descriptor.to_json_object(True)
+                _response = _descriptor.to_dict(True)
         return _response
 
     @staticmethod
@@ -41,11 +41,10 @@ class DatabaseEndpoint(endpoint.Endpoint):
         _body = DatabaseEndpoint.get_body()
         _name = _body.get("name", None)
         if _name is not None:
-            _description = _body.get("description", None)
-            _descriptor = Database(name=_name, description=_description)
+            _descriptor = Database.from_json(_body)
             if not DescriptorUtils.does_db_descriptor_exist(_descriptor):
                 _descriptor.save()
-                _response = _descriptor.to_json_object()
+                _response = _descriptor.to_dict()
         return _response
 
     @staticmethod
@@ -62,7 +61,7 @@ class DatabaseEndpoint(endpoint.Endpoint):
                 if _description is not None:
                     _descriptor.set_description(_description)
                 _descriptor.save()
-                _response = _descriptor.to_json_object()
+                _response = _descriptor.to_dict()
         return _response
 
     @staticmethod

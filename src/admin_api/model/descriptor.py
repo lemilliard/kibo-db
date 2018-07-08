@@ -28,9 +28,20 @@ class Descriptor(object):
     def set_system_name(self, system_name):
         self._system_name = system_name
 
-    def to_dict(self):
-        _json_object = dict()
-        _json_object["name"] = self._name
-        _json_object["description"] = self._description
-        _json_object["system_name"] = self._system_name
-        return _json_object
+    @staticmethod
+    def from_json(_json: dict):
+        _name = _json.get("name", None)
+        _description = _json.get("description", None)
+        _system_name = _json.get("system_name", None)
+        return Descriptor(
+            name=_name,
+            description=_description,
+            system_name=_system_name
+        )
+
+    def to_dict(self, _with_details: bool = False):
+        _dict = dict()
+        _dict["name"] = self._name
+        _dict["description"] = self._description
+        _dict["system_name"] = self._system_name
+        return _dict

@@ -20,6 +20,11 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+Enregistrer une nouvelle dépendances dans le fichier 'requirements.txt'
+```
+pip freeze > requirements.txt
+```
+
 Les requêtes seraient de type suivant:
 
 ##### GET ALL

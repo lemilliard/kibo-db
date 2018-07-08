@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 from src.admin_api.model.database import Database
@@ -33,7 +34,10 @@ class DescriptorUtils(object):
             _db_path = FileUtils.join_path(Config.files_directory, _db_system_name)
             _file_path = FileUtils.join_path(_db_path, _json_file)
             if FileUtils.does_file_exist(_file_path):
-                _descriptor = Database.from_file(_file_path)
+                _file = open(_file_path)
+                _json_object = json.load(_file)
+                _descriptor = Database.from_json(_json_object)
+                _file.close()
         return _descriptor
 
     @staticmethod
@@ -61,7 +65,10 @@ class DescriptorUtils(object):
             _tb_path = FileUtils.join_path(_db_path, _tb_system_name)
             _file_path = FileUtils.join_path(_tb_path, _json_file)
             if FileUtils.does_file_exist(_file_path):
-                _descriptor = Table.from_file(_file_path)
+                _file = open(_file_path)
+                _json_object = json.load(_file)
+                _descriptor = Table.from_json(_json_object)
+                _file.close()
         return _descriptor
 
     @staticmethod
