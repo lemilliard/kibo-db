@@ -47,8 +47,8 @@ class Database(Descriptor):
     def to_dict(self, _with_details: bool = False) -> dict:
         _dict = super().to_dict()
         _tables = descriptor_utils.DescriptorUtils.get_tbs_descriptor(self.get_system_name())
-        _dict["tables"] = []
         if _with_details:
+            _dict["tables"] = []
             for _table in _tables:
                 _dict["tables"].append(_table.to_dict())
         return _dict
