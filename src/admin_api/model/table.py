@@ -1,6 +1,5 @@
 import os
 import json
-from typing import List
 
 from src.config import Config
 from src.admin_api.utils.file_utils import FileUtils
@@ -13,7 +12,7 @@ class Table(Descriptor):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._fields: List[Field] = kwargs.get("fields", [])
+        self._fields = kwargs.get("fields", [])
 
     def get_fields(self):
         return self._fields
@@ -50,20 +49,27 @@ class Table(Descriptor):
         return _updated
 
     @staticmethod
-    def from_file(_file_path: str):
-        json_object = json.load(open(_file_path))
-        _name = json_object["name"]
-        _description = json_object["description"]
-        _system_name = json_object["system_name"]
-        _fields = []
-        for _field in json_object["fields"]:
-            _fields.append(Field.from_json_object(_field))
+    def from_json(_json: dict):
+        _name = _json.get("name", None)
+        _description = _json.get("description", None)
+        _system_name = _json.get("system_name", None)
+        _fields = _json.get("fields", [])
+        _f = []
+        for _field in _fields:
+            _f.append(Field.from_json(_field))
         return Table(
             name=_name,
             description=_description,
             system_name=_system_name,
-            fields=_fields
+            fields=_f
         )
+
+    def to_dict(self, _with_details: bool = False) -> dict:
+        _object = super().to_dict()
+        _object["fields"] = []
+        for _field in self._fields:
+            _object["fields"].append(_field.to_dict())
+        return _object
 
     def save(self, _db_system_name: str):
         if self.get_name() is not None and \
@@ -100,18 +106,3 @@ class Table(Descriptor):
 
     def get_file_path(self, _db_system_name: str) -> str:
         return FileUtils.join_path(self.get_dir_path(_db_system_name), self._system_name + ".json")
-
-    def to_dict(self) -> dict:
-        _json_object = super().to_dict()
-        _json_object["fields"] = []
-        for _field in self._fields:
-            _json_object["fields"].append(_field.to_json_object())
-        return _json_object
-
-    def to_json_object(self, _with_fields: bool = False) -> dict:
-        _json_object = super().to_dict()
-        if _with_fields:
-            _json_object["fields"] = []
-            for _field in self._fields:
-                _json_object["fields"].append(_field.to_json_object())
-        return _json_object

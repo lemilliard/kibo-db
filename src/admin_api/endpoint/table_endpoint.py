@@ -27,12 +27,12 @@ class TableEndpoint(endpoint.Endpoint):
             _descriptor_dicts = []
             _descriptors = DescriptorUtils.get_tbs_descriptor(_db_system_name)
             for _descriptor in _descriptors:
-                _descriptor_dicts.append(_descriptor.to_json_object())
+                _descriptor_dicts.append(_descriptor.to_dict())
             _response = _descriptor_dicts
         else:
             _descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(_db_system_name, _tb_system_name)
             if _descriptor is not None:
-                _response = _descriptor.to_json_object(True)
+                _response = _descriptor.to_dict()
         return _response
 
     @staticmethod
@@ -41,12 +41,10 @@ class TableEndpoint(endpoint.Endpoint):
         _body = TableEndpoint.get_body()
         _name = _body.get("name", None)
         if _name is not None:
-            _description = _body.get("description", None)
-            _fields = _body.get("fields", [])
-            _descriptor = Table(name=_name, description=_description, fields=_fields)
+            _descriptor = Table.from_json(_body)
             if not DescriptorUtils.does_tb_descriptor_exist(_db_system_name, _descriptor):
                 _descriptor.save(_db_system_name)
-                _response = _descriptor.to_json_object(True)
+                _response = _descriptor.to_dict()
         return _response
 
     @staticmethod
@@ -66,7 +64,7 @@ class TableEndpoint(endpoint.Endpoint):
                 if _fields is not None:
                     _descriptor.set_fields(_fields)
                 _descriptor.save(_db_system_name)
-                _response = _descriptor.to_json_object(True)
+                _response = _descriptor.to_dict()
         return _response
 
     @staticmethod
