@@ -20,9 +20,9 @@ class Database(Descriptor):
         _dir_path = self.get_dir_path()
         if not os.path.exists(_dir_path):
             os.makedirs(_dir_path)
-        file = open(self.get_file_path(), "w")
-        json.dump(self.to_dict(), file, indent=Config.json_indent, separators=Config.json_separators)
-        file.close()
+        _file = open(self.get_file_path(), "w")
+        json.dump(self.to_dict(), _file, indent=Config.json_indent, separators=Config.json_separators)
+        _file.close()
 
     def delete(self) -> bool:
         return FileUtils.delete_dir(self.get_dir_path())

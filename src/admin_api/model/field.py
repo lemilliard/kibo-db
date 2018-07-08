@@ -12,7 +12,6 @@ class Field(Descriptor):
         super().__init__(*args, **kwargs)
         self._id = kwargs.get("id", False)
         self._type = kwargs.get("type", "string")
-        self._index = self._system_name
 
     def get_id(self) -> bool:
         return self._id
@@ -26,24 +25,18 @@ class Field(Descriptor):
     def set_type(self, _type: str):
         self._type = _type
 
-    def get_index(self) -> bool:
-        return self._index
-
-    def set_index(self, _index: bool):
-        self._index = _index
-
     def get_index_dir_path(self, _db_system_name: str, _tb_system_name: str) -> str:
         _db_path = FileUtils.join_path(Config.files_directory, _db_system_name)
         _tb_path = FileUtils.join_path(_db_path, _tb_system_name)
         _tb_index_path = FileUtils.join_path(_tb_path, Config.index_directory)
-        return FileUtils.join_path(_tb_index_path, self._index + ".json")
+        return FileUtils.join_path(_tb_index_path, self._system_name + ".json")
 
     def save(self, _db_system_name: str, _tb_system_name: str):
         _index_file_path = self.get_index_dir_path(_db_system_name, _tb_system_name)
         if not os.path.exists(_index_file_path):
-            file = open(_index_file_path, "w")
-            json.dump([], file, indent=Config.json_indent, separators=Config.json_separators)
-            file.close()
+            _file = open(_index_file_path, "w")
+            json.dump([], _file, indent=Config.json_indent, separators=Config.json_separators)
+            _file.close()
 
     @staticmethod
     def from_json(_json: dict):
@@ -52,19 +45,16 @@ class Field(Descriptor):
         _description = _json.get("description", None)
         _system_name = _json.get("system_name", None)
         _type = _json.get("type", "string")
-        _index = _json.get("index", None)
         return Field(
             id=_id,
             name=_name,
             description=_description,
             system_name=_system_name,
-            type=_type,
-            index=_index
+            type=_type
         )
 
     def to_dict(self, _with_details: bool = False):
         _dict = super().to_dict()
         _dict["id"] = self._id
         _dict["type"] = self._type
-        _dict["index"] = self._index
         return _dict
