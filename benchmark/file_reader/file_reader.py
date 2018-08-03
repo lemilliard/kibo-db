@@ -122,6 +122,25 @@ def get_value(line):
 		value = value[1].split('\"')
 		return value[0]
 	
+def move_file(dir):
+	print('move_file')
+	s = start = current_milli_time()
+	file_list = os.listdir(dir)
+	print_result('listdir', s)
+	trouve = False
+	stop = 500
+	i = 1
+	for file in file_list:
+		if file.endswith('.json'):
+			try:
+				os.rename(dir + '\\' + file, dir + '\\test\\' + file)
+			except OSError:
+				os.mkdir(dir + '\\test\\')
+				os.rename(dir + '\\' + file, dir + '\\test\\' + file)
+			if i >= stop:
+				break
+			i += 1
+	print_result('total', start, str(i) + ' files')
 	
 count_objects()
 print()
@@ -134,4 +153,6 @@ for i in result:
 	print(i)
 print()
 search_object_dicho('prenom437')
+print()
+move_file('.\\search_file')
 print()
