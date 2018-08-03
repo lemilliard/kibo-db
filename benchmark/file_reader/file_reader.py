@@ -62,17 +62,6 @@ def search_object_bis():
         print('Statham' in f)
         print_result('loop', s)
     print_result('total', start, 'searching Statham')
-
-def search_file(search, dir):
-	start = current_milli_time()
-	file_list = os.listdir(dir)
-	for file in file_list:
-		part_name = file.split('-')
-		if os.path.isdir(file):
-			yield from search_file(search, dir + '\\' + file)
-		if len(part_name) > 1 and search > part_name[0] and search < part_name[1]:
-			yield file
-	print_result('total', start, 'searching file to insert index in dir : ' + dir)
 	
 def search_file_dir(search, dir):
 	start = current_milli_time()
@@ -91,18 +80,58 @@ def search_file_dir(search, dir):
 			for directo in dirs:
 				yield from search_file_dir(search, dir + '\\' + directo)
 	print_result('total', start, 'searching file to insert index in dir : ' + dir)
+	
+def search_object_dicho(search):
+	print('search dichotomic')
+	s = start = current_milli_time()
+	c = 0
+	new_object = False
+	with open('./data2.json') as f:
+		print_result('open', s)
+		s = current_milli_time()
+		lines = f.readlines()
+		print_result('readlines', s)
+		s = current_milli_time()
+		result = dichotomie(lines, 0, len(lines), search)
+		print_result('loop', s)
+		
+	if result == None:
+		result = 'None'
+	print_result('total', start, 'value ' + result)
 			
+def dichotomie(lines, min, max, search):
+	if min == max:
+		if search == get_value(lines[min]):
+			return lines[min]
+		else:
+			return None
+	c = round((min+max)/2)
+	if get_value(lines[c]) != None:
+		if search == get_value(lines[c]):
+			return lines[c]
+		elif search < get_value(lines[c]):
+			return dichotomie(lines, min, c - 1, search)
+		else:
+			return dichotomie(lines, c + 1, max, search)
+	else:
+		return dichotomie(lines, min + 1, max, search)
+	
+def get_value(line):
+	value = line.split('\"value\":\"')
+	if len(value) > 1:
+		value = value[1].split('\"')
+		return value[0]
+	
+	
 count_objects()
 print()
 search_object()
 print()
 search_object_bis()
 print()
-result = search_file('b', '.\\search_file')
-for i in result:
-	print(i)
-print()
 result = search_file_dir('e', '.\\search_file')
 for i in result:
 	print(i)
+print()
+search_object_dicho('prenom437')
 print()
