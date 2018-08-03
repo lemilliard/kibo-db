@@ -1,4 +1,5 @@
 import time
+import os
 
 
 def current_milli_time():
@@ -62,9 +63,46 @@ def search_object_bis():
         print_result('loop', s)
     print_result('total', start, 'searching Statham')
 
-
+def search_file(search, dir):
+	start = current_milli_time()
+	file_list = os.listdir(dir)
+	for file in file_list:
+		part_name = file.split('-')
+		if os.path.isdir(file):
+			yield from search_file(search, dir + '\\' + file)
+		if len(part_name) > 1 and search > part_name[0] and search < part_name[1]:
+			yield file
+	print_result('total', start, 'searching file to insert index in dir : ' + dir)
+	
+def search_file_dir(search, dir):
+	start = current_milli_time()
+	file_list = os.listdir(dir)
+	trouve = False
+	for file in file_list:
+		if file.endswith('.json'):
+			part_name = file.split('-')
+			if len(part_name) > 1 and search > part_name[0] and search < part_name[1]:
+				yield file
+				print('Find in directory : ' + dir)
+				trouve = True
+	if not trouve:
+		dir_list = os.walk(dir)
+		for _, dirs, _ in dir_list:
+			for directo in dirs:
+				yield from search_file_dir(search, dir + '\\' + directo)
+	print_result('total', start, 'searching file to insert index in dir : ' + dir)
+			
 count_objects()
 print()
 search_object()
 print()
 search_object_bis()
+print()
+result = search_file('b', '.\\search_file')
+for i in result:
+	print(i)
+print()
+result = search_file_dir('e', '.\\search_file')
+for i in result:
+	print(i)
+print()
