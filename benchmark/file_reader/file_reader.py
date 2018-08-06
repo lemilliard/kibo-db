@@ -100,7 +100,7 @@ def get_value(line):
 def move_file(dir, file_name):
     print('move_file')
     s = start = current_milli_time()
-    file_list = os.listdir(dir)
+    file_list = os.listdir(dir + '\\test2')
     print_result('listdir', s)
     trouve = False
     stop = 500
@@ -108,15 +108,35 @@ def move_file(dir, file_name):
     for file in file_list:
         if file == file_name:
             try:
-                os.rename(dir + '\\' + file, dir + '\\test\\' + file)
+                os.rename(dir + '\\test2\\' + file, dir + '\\test\\' + file)
             except OSError:
                 os.mkdir(dir + '\\test\\')
-                os.rename(dir + '\\' + file, dir + '\\test\\' + file)
+                os.rename(dir + '\\test2\\' + file, dir + '\\test\\' + file)
             if i >= stop:
                 break
             i += 1
     print_result('total', start, ' 1 files')
 
+def move_file_lbyl(dir, file_name):
+	print('move_file lbyl')
+	s = start = current_milli_time()
+	file_list = os.listdir(dir + '\\test')
+	print_result('listdir', s)
+	trouve = False
+	stop = 500
+	i = 1
+	for file in file_list:
+		if file == file_name:
+			if os.path.isdir(dir + '\\test2'):
+				os.rename(dir + '\\test\\' + file, dir + '\\test2\\' + file)
+			else:
+				os.mkdir(dir + '\\test2\\')
+				os.rename(dir + '\\test\\' + file, dir + '\\test2\\' + file)
+			if i >= stop:
+				break
+			i += 1
+	print_result('total', start, ' 1 files')	
+	
 def split_file():
 	start = current_milli_time()
 	input = open('./data/data2.json', 'r').read().split('\n')
@@ -138,21 +158,61 @@ def split_file():
 		output.close()
 	print_result('total', start, str(lenght) + ' data in files')
 	
+def test_seek(f, min, max, search):
+	print('search search_object_dicho')
+	start = current_milli_time()
+	result = search_dich(f, min, max, search)
+	print_result('total', start, 'find value ' + result)
+	
+def search_dich(f, min, max, search):
+	if min == max:
+			f.seek(min)
+			for line in f:
+				if 'value' in line:
+					if search == get_value(line):
+						return line
+					else:
+						return None
+					break
+	c = round((min + max) / 2)
+	f.seek(c)
+	value = None
+	for line in f:
+		if 'value' in line:
+			value = get_value(line)
+			if value is not None:
+				if search == value:
+					return line
+				elif search < value:
+					return search_dich(f, min, c - 1, search)
+				else:
+					return search_dich(f, c + 1, max, search)
+			else:
+				return search_dich(f, min + 1, max, search)
+			break	
 
-count_objects()
+	
+# count_objects()
+# print()
+
+# search_object()
+# print()
+
+# search_object_bis()
+# print()
+
+search_object_dicho('prenom987')
 print()
 
-search_object()
-print()
+# move_file(data_folder, 'dataMove.json')
+# print()
 
-search_object_bis()
-print()
+# move_file_lbyl(data_folder, 'dataMove.json')
+# print()
 
-search_object_dicho('prenom437')
-print()
+# split_file()
+# print()
 
-move_file(data_folder, 'data.json')
-print()
-
-split_file()
-print()
+max = os.path.getsize(data_file)
+with open(data_file) as f:
+	test_seek(f, 0, max, 'prenom987')
