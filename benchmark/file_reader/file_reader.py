@@ -167,14 +167,14 @@ def test_seek(f, min, max, search):
 	
 def search_dich(f, min, max, search):
 	if min == max:
-			f.seek(min)
-			for line in f:
-				if 'value' in line:
-					if search == get_value(line):
-						return line
-					else:
-						return None
-					break
+		f.seek(min)
+		for line in f:
+			if 'value' in line:
+				if search == get_value(line):
+					return line
+				else:
+					return None
+				break
 	c = round((min + max) / 2)
 	f.seek(c)
 	value = None
@@ -206,7 +206,7 @@ def comparateur(str1, str2):
 			if cpt1 != '' and cpt2 != '':
 				if cpt1 > cpt2:
 					return str1
-				else:
+				elif cpt1 < cpt2:
 					return str2
 			cpt1 = ''
 			cpt2 = ''
@@ -248,7 +248,8 @@ print(comparateur('prenom9', 'prenom50'))
 print(comparateur('prenom50', 'prenom9'))
 print(comparateur('prenom50', 'prenome9'))
 print(comparateur('prenom5', 'prenom9a'))
-print(comparateur('prenom50a', 'prenom90a'))
+print(comparateur('prenom50b', 'prenom90a'))
+print(comparateur('prenom90b', 'prenom90a'))
 print(comparateur('prenom987', 'prenom997'))
 print()
 
