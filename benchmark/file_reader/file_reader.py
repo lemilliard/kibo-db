@@ -97,7 +97,7 @@ def get_value(line):
         return value[0]
 
 
-def move_file(dir):
+def move_file(dir, file_name):
     print('move_file')
     s = start = current_milli_time()
     file_list = os.listdir(dir)
@@ -106,7 +106,7 @@ def move_file(dir):
     stop = 500
     i = 1
     for file in file_list:
-        if file.endswith('.json'):
+        if file == file_name:
             try:
                 os.rename(dir + '\\' + file, dir + '\\test\\' + file)
             except OSError:
@@ -115,8 +115,29 @@ def move_file(dir):
             if i >= stop:
                 break
             i += 1
-    print_result('total', start, str(i) + ' files')
+    print_result('total', start, ' 1 files')
 
+def split_file():
+	start = current_milli_time()
+	input = open('./data/data2.json', 'r').read().split('\n')
+	lenght = round(len(input)/2)
+	for lines in range(0, len(input), lenght):
+		l = lines + lenght
+		if len(input) < l:
+			l = len(input) - 1
+		outputData = input[lines:l]
+		i = 0
+		if get_value(input[l - 1]) != None:
+			endName = get_value(input[l - 1])
+		else:
+			while get_value(input[l - 1]) == None:
+				endName = get_value(input[l - 1 - i])
+				i += 1
+		output = open('./data/' + get_value(input[lines]) + '-' + endName +'.json', 'w')
+		output.write('\n'.join(outputData))
+		output.close()
+	print_result('total', start, str(lenght) + ' data in files')
+	
 
 count_objects()
 print()
@@ -130,5 +151,8 @@ print()
 search_object_dicho('prenom437')
 print()
 
-move_file(data_folder)
+move_file(data_folder, 'data.json')
+print()
+
+split_file()
 print()
