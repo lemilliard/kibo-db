@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from benchmark.common import data_folder
 from benchmark.common import current_milli_time
@@ -101,7 +102,7 @@ def get_value(line):
 def move_file(dir, file_name):
     print('move_file')
     s = start = current_milli_time()
-    file_list = os.listdir(dir + '\\test2')
+    file_list = os.listdir(dir + '/test2')
     print_result('listdir', s)
     trouve = False
     stop = 500
@@ -109,10 +110,10 @@ def move_file(dir, file_name):
     for file in file_list:
         if file == file_name:
             try:
-                os.rename(dir + '\\test2\\' + file, dir + '\\test\\' + file)
+                os.rename(dir + '/test2/' + file, dir + '/test/' + file)
             except OSError:
-                os.mkdir(dir + '\\test\\')
-                os.rename(dir + '\\test2\\' + file, dir + '\\test\\' + file)
+                os.mkdir(dir + '/test/')
+                os.rename(dir + '/test2/' + file, dir + '/test/' + file)
             if i >= stop:
                 break
             i += 1
@@ -121,21 +122,37 @@ def move_file(dir, file_name):
 def move_file_lbyl(dir, file_name):
 	print('move_file lbyl')
 	s = start = current_milli_time()
-	file_list = os.listdir(dir + '\\test')
+	file_list = os.listdir(dir + '/test')
 	print_result('listdir', s)
 	trouve = False
 	stop = 500
 	i = 1
 	for file in file_list:
 		if file == file_name:
-			if os.path.isdir(dir + '\\test2'):
-				os.rename(dir + '\\test\\' + file, dir + '\\test2\\' + file)
+			if os.path.isdir(dir + '/test2'):
+				os.rename(dir + '/test/' + file, dir + '/test2/' + file)
 			else:
-				os.mkdir(dir + '\\test2\\')
-				os.rename(dir + '\\test\\' + file, dir + '\\test2\\' + file)
+				os.mkdir(dir + '/test2/')
+				os.rename(dir + '/test/' + file, dir + '/test2/' + file)
 			if i >= stop:
 				break
 			i += 1
+	print_result('total', start, ' 1 files')	
+	
+def move_file_shutil(dir, file_name):
+	print('move_file_shutil')
+	s = start = current_milli_time()
+	file_list = os.listdir(dir + '/test2')
+	print_result('listdir', s)
+	trouve = False
+	i = 1
+	for file in file_list:
+		if file == file_name:
+			try:
+				shutil.move(dir + '/test2/' + file, dir + '/test/')
+			except OSError:
+				os.mkdir(dir + '/test/')
+				shutil.move(dir + '/test2/' + file, dir + '/test/')
 	print_result('total', start, ' 1 files')	
 	
 def split_file():
@@ -235,6 +252,37 @@ def comparateur(str1, str2):
 			else:
 				return str2
 	
+def delete_file(file_name):
+	os.remove(file_name)
+	print("File Removed!")
+	
+def copy_file(src, dst):
+	print('copy file')
+	start = current_milli_time()
+	try:
+		O_BINARY = os.O_BINARY
+	except:
+		O_BINARY = 0
+	READ_FLAGS = os.O_RDONLY | O_BINARY
+	WRITE_FLAGS = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | O_BINARY
+	BUFFER_SIZE = 128*1024
+	print('INIT')
+	try:
+		fin = os.open(src, READ_FLAGS)
+		stat = os.fstat(fin)
+		fout = os.open(dst, WRITE_FLAGS, stat.st_mode)
+		print('OPEN ok')
+		for x in iter(lambda: os.read(fin, BUFFER_SIZE), b''):
+			os.write(fout, x)
+	finally:
+		try:
+			os.close(fin)
+			delete_file(src)
+		except: pass
+		try: os.close(fout)
+		except: pass
+	print_result('total', start, 'copy and delete ' + src)
+	
 # count_objects()
 # print()
 
@@ -244,27 +292,34 @@ def comparateur(str1, str2):
 # search_object_bis()
 # print()
 	
-print(comparateur('prenom9', 'prenom50'))
-print(comparateur('prenom50', 'prenom9'))
-print(comparateur('prenom50', 'prenome9'))
-print(comparateur('prenom5', 'prenom9a'))
-print(comparateur('prenom50b', 'prenom90a'))
-print(comparateur('prenom90b', 'prenom90a'))
-print(comparateur('prenom987', 'prenom997'))
-print()
-
-search_object_dicho('prenom987')
-print()
-
-# move_file(data_folder, 'dataMove.json')
+# print(comparateur('prenom9', 'prenom50'))
+# print(comparateur('prenom50', 'prenom9'))
+# print(comparateur('prenom50', 'prenome9'))
+# print(comparateur('prenom5', 'prenom9a'))
+# print(comparateur('prenom50b', 'prenom90a'))
+# print(comparateur('prenom90b', 'prenom90a'))
+# print(comparateur('prenom987', 'prenom997'))
 # print()
 
-# move_file_lbyl(data_folder, 'dataMove.json')
+# search_object_dicho('prenom987')
 # print()
+
+move_file(data_folder, 'dataMove.json')
+print()
+
+move_file_lbyl(data_folder, 'dataMove.json')
+print()
+
+move_file_shutil(data_folder, 'dataMove.json')
+print()
+
+copy_file(data_folder + '/test/' + 'dataMove.json', data_folder + '/test2/' + 'dataMove.json')
+print()
 
 # split_file()
 # print()
 
-max = os.path.getsize(data_file)
-with open(data_file) as f:
-	test_seek(f, 0, max, 'prenom987')
+# max = os.path.getsize(data_file)
+# with open(data_file) as f:
+	# test_seek(f, 0, max, 'prenom987')
+# print()
