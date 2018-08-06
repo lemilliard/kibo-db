@@ -73,21 +73,22 @@ def search_object_dicho(search):
 
 
 def dichotomie(lines, min, max, search):
-    if min == max:
-        if search == get_value(lines[min]):
-            return lines[min]
-        else:
-            return None
-    c = round((min + max) / 2)
-    if get_value(lines[c]) is not None:
-        if search == get_value(lines[c]):
-            return lines[c]
-        elif search < get_value(lines[c]):
-            return dichotomie(lines, min, c - 1, search)
-        else:
-            return dichotomie(lines, c + 1, max, search)
-    else:
-        return dichotomie(lines, min + 1, max, search)
+	if min == max:
+		if search == get_value(lines[min]):
+			return lines[min]
+		else:
+			return None
+	c = round((min + max) / 2)
+	if get_value(lines[c]) is not None:
+		compare = comparateur(search, get_value(lines[c])) 
+		if search == get_value(lines[c]):
+			return lines[c]
+		elif compare == get_value(lines[c]):
+			return dichotomie(lines, min, c - 1, search)
+		else:
+			return dichotomie(lines, c + 1, max, search)
+	else:
+		return dichotomie(lines, min + 1, max, search)
 
 
 def get_value(line):
@@ -162,7 +163,7 @@ def test_seek(f, min, max, search):
 	print('search search_object_dicho')
 	start = current_milli_time()
 	result = search_dich(f, min, max, search)
-	print_result('total', start, 'find value ' + result)
+	print_result('total', start, 'find value ' + str(result))
 	
 def search_dich(f, min, max, search):
 	if min == max:
@@ -181,9 +182,10 @@ def search_dich(f, min, max, search):
 		if 'value' in line:
 			value = get_value(line)
 			if value is not None:
+				compare = comparateur(search, value) 
 				if search == value:
 					return line
-				elif search < value:
+				elif compare == value:
 					return search_dich(f, min, c - 1, search)
 				else:
 					return search_dich(f, c + 1, max, search)
@@ -191,6 +193,47 @@ def search_dich(f, min, max, search):
 				return search_dich(f, min + 1, max, search)
 			break	
 
+def comparateur(str1, str2):
+	num = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+	size = min(len(str1), len(str2))
+	cpt1 = ''
+	cpt2 = ''
+	for i in range(0, size):
+		if str1[i] in num and str2[i] in num:
+			cpt1 += str1[i]
+			cpt2 += str2[i]
+		else:
+			if cpt1 != '' and cpt2 != '':
+				if cpt1 > cpt2:
+					return str1
+				else:
+					return str2
+			cpt1 = ''
+			cpt2 = ''
+			if str1[i] > str2[i]:
+				return str1
+			elif str1[i] < str2[i]:
+				return str2
+				
+	#Si ça se termine pas des chiffre on verifie s'il ne reste pas un chiffre pour un des deux sinon on compare ces chiffres			
+	if cpt1 != '' and cpt2 != '':
+		if len(str1) != len(str2):
+			try:
+				if str1[size] in num:
+					return str1
+			except:
+				if str2[size] in num:
+					return str2
+				else:
+					if str1[i] > str2[i]:
+						return str1
+					elif str1[i] < str2[i]:
+						return str2
+		else:
+			if cpt1 > cpt2:
+				return str1
+			else:
+				return str2
 	
 # count_objects()
 # print()
@@ -200,6 +243,14 @@ def search_dich(f, min, max, search):
 
 # search_object_bis()
 # print()
+	
+print(comparateur('prenom9', 'prenom50'))
+print(comparateur('prenom50', 'prenom9'))
+print(comparateur('prenom50', 'prenome9'))
+print(comparateur('prenom5', 'prenom9a'))
+print(comparateur('prenom50a', 'prenom90a'))
+print(comparateur('prenom987', 'prenom997'))
+print()
 
 search_object_dicho('prenom987')
 print()
