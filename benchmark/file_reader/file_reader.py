@@ -216,14 +216,15 @@ def comparateur(str1, str2):
 	cpt1 = ''
 	cpt2 = ''
 	for i in range(0, size):
-		if str1[i] in num and str2[i] in num:
+		if str1[i] in num:
 			cpt1 += str1[i]
+		if str2[i] in num:
 			cpt2 += str2[i]
-		else:
+		if str2[i] not in num or str2[i] not in num:
 			if cpt1 != '' and cpt2 != '':
-				if cpt1 > cpt2:
+				if int(cpt1) > int(cpt2):
 					return str1
-				elif cpt1 < cpt2:
+				elif int(cpt1) < int(cpt2):
 					return str2
 			cpt1 = ''
 			cpt2 = ''
@@ -247,7 +248,7 @@ def comparateur(str1, str2):
 					elif str1[i] < str2[i]:
 						return str2
 		else:
-			if cpt1 > cpt2:
+			if int(cpt1) > int(cpt2):
 				return str1
 			else:
 				return str2
@@ -266,12 +267,10 @@ def copy_file(src, dst):
 	READ_FLAGS = os.O_RDONLY | O_BINARY
 	WRITE_FLAGS = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | O_BINARY
 	BUFFER_SIZE = 128*1024
-	print('INIT')
 	try:
 		fin = os.open(src, READ_FLAGS)
 		stat = os.fstat(fin)
 		fout = os.open(dst, WRITE_FLAGS, stat.st_mode)
-		print('OPEN ok')
 		for x in iter(lambda: os.read(fin, BUFFER_SIZE), b''):
 			os.write(fout, x)
 	finally:
@@ -292,14 +291,15 @@ def copy_file(src, dst):
 # search_object_bis()
 # print()
 	
-# print(comparateur('prenom9', 'prenom50'))
-# print(comparateur('prenom50', 'prenom9'))
-# print(comparateur('prenom50', 'prenome9'))
-# print(comparateur('prenom5', 'prenom9a'))
-# print(comparateur('prenom50b', 'prenom90a'))
-# print(comparateur('prenom90b', 'prenom90a'))
-# print(comparateur('prenom987', 'prenom997'))
-# print()
+print(comparateur('prenom9', 'prenom50'))
+print(comparateur('prenom50', 'prenom9'))
+print(comparateur('prenom50', 'prenome9'))
+print(comparateur('prenom5', 'prenom9a'))
+print(comparateur('prenom50b', 'prenom90a'))
+print(comparateur('prenom90b', 'prenom90a'))
+print(comparateur('prenom987', 'prenom997'))
+print(comparateur('ABC-999-DEF', 'ABC-1000-DEF'))
+print()
 
 # search_object_dicho('prenom987')
 # print()
