@@ -6,19 +6,23 @@ echo ""
 
 if [ "$(docker ps -a | grep kibodb-run)" ]
 then 
-    echo "Docker mongo already running"
-    echo "Please run 'docker rm kibodb-run' before running this script"
-else
-    echo "Docker build : "
+    echo "Docker kibodb already running"
     echo ""
-    docker build . --tag kibodb
-
+    echo "Docker rm kibodb-run: "
     echo ""
-    echo "Docker run : "
-    echo ""
-    docker run --name kibodb-run -p 8500:8500 -d kibodb
-
-    echo "Done"
-
-    docker logs kibodb-run
+    docker rm kibodb-run
 fi
+
+echo "Docker build : "
+echo ""
+docker build . --tag kibodb
+
+echo ""
+echo "Docker run : "
+echo ""
+docker run --name kibodb-run -p 8500:8500 -d kibodb
+
+echo "Done"
+
+docker logs kibodb-run
+
