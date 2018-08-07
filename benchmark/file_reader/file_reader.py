@@ -220,7 +220,7 @@ def comparateur(str1, str2):
 			cpt1 += str1[i]
 		if str2[i] in num:
 			cpt2 += str2[i]
-		if str2[i] not in num or str2[i] not in num:
+		if str1[i] not in num or str2[i] not in num:
 			if cpt1 != '' and cpt2 != '':
 				if int(cpt1) > int(cpt2):
 					return str1
@@ -299,6 +299,7 @@ print(comparateur('prenom50b', 'prenom90a'))
 print(comparateur('prenom90b', 'prenom90a'))
 print(comparateur('prenom987', 'prenom997'))
 print(comparateur('ABC-999-DEF', 'ABC-1000-DEF'))
+print(comparateur('A', '9'))
 print()
 
 # search_object_dicho('prenom987')
