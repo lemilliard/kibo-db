@@ -19,9 +19,8 @@ echo "#################"
 echo ""
 
 
-if not exist "%cd%\data\" mkdir %cd%\data
-if not exist "%cd%\data\kibodb" mkdir %cd%\data\kibodb
-if not exist "%cd%\data\kibodb\databases" mkdir %cd%\data\kibodb\databases
+if not exist "C:\kibodb" mkdir C:\kibodb
+if not exist "C:\kibodb\databases" mkdir C:\kibodb\databases
 
 echo ""
 echo "##############"
@@ -29,7 +28,7 @@ echo "# Docker run #"
 echo "##############"
 echo ""
 
-docker run -v %cd%/data/kibodb/databases:/usr/src/databases --name kibodb-run -p 8500:8500 -d kibodb
+docker run -v C:/kibodb/databases:/usr/src/databases --name kibodb-run -p 8500:8500 -d kibodb
 
 echo ""
 echo "#########################"
