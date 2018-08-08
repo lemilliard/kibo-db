@@ -2,18 +2,18 @@ FROM python:3
 
 WORKDIR /usr/src/app
 
+RUN mkdir /usr/src/databases
+VOLUME /usr/src/databases
+
 COPY requirements.txt ./
 
-RUN pip install virtualenv
-RUN virtualenv venv
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org pip
+RUN pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN . venv/bin/activate
-ENV FLASK_APP='/usr/src/app/src/main.py'
+ENV FLASK_APP='./src/main.py'
 
 EXPOSE 8500 8500
 
-WORKDIR ./src/
 CMD [ "python", "-m", "flask", "run" ]
