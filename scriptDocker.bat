@@ -1,22 +1,8 @@
+@echo off
 echo "##########################"
 echo "# Starting KiboDB Docker #"
 echo "##########################"
 echo ""
-
-REM if [docker ps -a | findstr 'kibodb-run'] (
-REM     echo "Docker kibodb already running"
-REM     echo ""
-
-REM     echo "Docker rm kibodb-run: "
-REM     echo ""
-REM     docker rm -f kibodb-run
-REM     echo ""
-
-REM     echo "Docker rmi kibodb"
-REM     echo ""
-REM     docker rmi -f kibodb
-REM     echo ""
-REM )
 
 echo ""
 echo "################"
