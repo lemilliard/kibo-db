@@ -1,10 +1,10 @@
-from . import endpoint
+from src.model import endpoint
 
 
 class SystemEndpoint(endpoint.Endpoint):
 
     @staticmethod
-    def connect(_db_system_name: str):
+    def connect():
         _response = None
         _body = SystemEndpoint.get_body()
         _username = _body.get("username", None)

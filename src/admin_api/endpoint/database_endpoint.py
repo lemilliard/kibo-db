@@ -1,24 +1,9 @@
-from flask import request
-
-from . import endpoint
+from src.model import endpoint
 from src.admin_api.utils.descriptor_utils import DescriptorUtils
 from src.admin_api.model.database import Database
 
 
 class DatabaseEndpoint(endpoint.Endpoint):
-
-    @staticmethod
-    def process_request(_db_system_name: str = None):
-        _response = "T'es con"
-        if request.method == "GET":
-            _response = DatabaseEndpoint.do_get(_db_system_name)
-        elif request.method == "POST":
-            _response = DatabaseEndpoint.do_post()
-        elif request.method == "PUT":
-            _response = DatabaseEndpoint.do_put(_db_system_name)
-        elif request.method == "DELETE":
-            _response = DatabaseEndpoint.do_delete(_db_system_name)
-        return _response
 
     @staticmethod
     def do_get(_db_system_name: str = None):

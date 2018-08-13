@@ -1,25 +1,10 @@
-from flask import request
-
+from src.model import endpoint
 from src.admin_api.model.field import Field
 from src.admin_api.utils.cleaner_utils import CleanerUtils
 from src.admin_api.utils.descriptor_utils import DescriptorUtils
-from . import endpoint
 
 
 class FieldEndpoint(endpoint.Endpoint):
-
-    @staticmethod
-    def process_request(_db_system_name: str, _tb_system_name: str, _fd_system_name: str = None):
-        _response = "T'es con"
-        if request.method == "GET":
-            _response = FieldEndpoint.do_get(_db_system_name, _tb_system_name, _fd_system_name)
-        elif request.method == "POST":
-            _response = FieldEndpoint.do_post(_db_system_name, _tb_system_name)
-        elif request.method == "PUT":
-            _response = FieldEndpoint.do_put(_db_system_name, _tb_system_name, _fd_system_name)
-        elif request.method == "DELETE":
-            _response = FieldEndpoint.do_delete(_db_system_name, _tb_system_name, _fd_system_name)
-        return _response
 
     @staticmethod
     def do_get(_db_system_name: str, _tb_system_name: str, _fd_system_name: str = None):
