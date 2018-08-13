@@ -3,7 +3,7 @@ import unittest
 from src.main.admin_api.utils.cleaner_utils import CleanerUtils
 
 
-class CleanerUtilsTest(unittest.TestCase):
+class TestCleanerUtils(unittest.TestCase):
 
     def test_generate_clean_name(self):
         given_name = 'Test 01 àé  HELLO'
