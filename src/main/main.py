@@ -1,8 +1,8 @@
 from flask import Flask
-from src.admin_api.main import admin_api
-from src.query_api.main import query_api
+from src.main.admin_api.main import admin_api
+from src.main.query_api.main import query_api
 
-from src.config import Config
+from src.main.config import Config
 
 app = Flask(__name__)
 app.config["DEBUG"] = True

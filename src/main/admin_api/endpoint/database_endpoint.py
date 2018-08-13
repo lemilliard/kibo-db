@@ -1,8 +1,8 @@
 from flask import request
 
 from . import endpoint
-from src.admin_api.utils.descriptor_utils import DescriptorUtils
-from src.admin_api.model.database import Database
+from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+from src.main.admin_api.model.database import Database
 
 
 class DatabaseEndpoint(endpoint.Endpoint):
