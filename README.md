@@ -35,3 +35,15 @@ Enregistrer une nouvelle dépendances dans le fichier 'requirements.txt'
 ```
 pip freeze > requirements.txt
 ```
+
+## Lancer KiboDB à l'aide de Docker
+
+Une image Docker a été créée afin de simplifier son utilisation sans avoir à installer l'environnement de 
+développement.
+
+Pour cela, il suffit de cloner le projet et de lancer les commandes suivantes dans un terminal à la racine 
+du projet.
+
+Pour le shell Windows, faire `start scriptDocker.bat`.
+
+Sur Git Bash, faire `sh scriptDocker.sh`
