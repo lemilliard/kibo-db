@@ -14,9 +14,20 @@ Utiliser python 3.0.6
 pip install virtualenv
 
 virtualenv venv
+```
 
+Sur une invite de commande Windows:
+```
 venv\Scripts\activate
+```
 
+Sur Git Bash:
+```
+. venv/Scripts/activate
+```
+
+Pour finir, faire:
+```
 pip install -r requirements.txt
 ```
 
@@ -25,132 +36,36 @@ Enregistrer une nouvelle dépendances dans le fichier 'requirements.txt'
 pip freeze > requirements.txt
 ```
 
-Les requêtes seraient de type suivant:
+## Lancer KiboDB à l'aide de Docker
 
-##### GET ALL
-```
-GET http://localhost:8080/{bdd}/{table}
-```
+Une image Docker a été créée afin de simplifier son utilisation sans avoir à installer l'environnement de 
+développement.
 
-Elle renverrait tous les enregistrement de la table.
+Pour cela, il suffit de cloner le projet et de lancer les commandes suivantes dans un terminal à la racine 
+du projet.
 
-##### GET BY ID
-```
-GET http://localhost:8080/{bdd}/{table}/{value}
-```
+Pour le shell Windows, faire `start scriptDocker.bat`.
 
-Elle renverrait l'enregistrement dont l'id correspond à la valeur donnée.
+Sur Git Bash, faire `sh scriptDocker.sh`
 
-##### GET BY CONDITION
+## Tests unitaires
+
+Pour lancer les tests unitaires, faire la commande suivante depuis la racine:
 ```
-POST http://localhost:8080/{bdd}/{table}
+python -m unittest -s src/test
 ```
 
-L'objet passé en body, serait ainsi fait:
+Pour lancer les tests unitaires avec la couverture de tests, faire la commande suivante depuis la racine:
 ```
-{
-	champs: [id, nom, prenom],
-	condition: {
-		nom: 'Robert',
-		AND: [
-			{
-				prenom: 'George',
-				OR: {
-					anneeNaissance: [12, 1980]
-				}
-			},
-			{
-				taille: 180
-			}
-		]
-	}
-}
+coverage run -m unittest discover src/test/
 ```
 
-Cette condition donnerait en langage SQL classique:
+Pour récupérer le rapport de couverture de test:
 ```
-SELECT
-  id,
-  nom,
-  prenom
-FROM {table}
-WHERE
-  (nom = 'Robert')
-  AND (prenom = 'George'
-    OR (anneeNaissance IN (12, 1980)))
-  AND (taille = 180)
+coverage report -m
 ```
 
-#### Les fichiers
-
-Marque:
+Pour générer le rapport de couverture en html:
 ```
-{
-	id: ,
-	intitule: '',
-	slogan: '',
-	fabriquant: '',
-	reference: ['Voiture', 'Caravane'],
-}
-```
-
-Voiture:
-```
-{
-	id: ,
-	marque: {
-		id: ,
-		intitule: '',
-		slogan: '',
-		fabriquant: '',
-		reference: ['Voiture', 'Caravane']
-	}
-}
-```
-
-Caravane:
-```
-{
-	id: ,
-	marque: {
-		id: ,
-		intitule: '',
-		slogan: '',
-		fabriquant: '',
-		reference: ['Voiture', 'Caravane']
-	}
-}
-```
-
-Au moment de la création d'une nouvelle table, par exemple Chaussure, embarquant une Marque
-avec les mêmes champs id, intitule, slogan et fabriquant qu'une Marque voiture ou caravane, 
-on ajoute Chaussure dans la reference de la marque et on met à jour toutes les voitures et caravanes
-de la marque pour modifier la marque dedans
-
-```
-{
-  "champs": [
-    "id"
-  ],
-  "condition": {
-    "nationalite": "France",
-    "OR": {
-      "id": 2
-    },
-    "AND": [
-      {
-        "marque": "Adria",
-        "OR": {
-          "annee": [
-            2004,
-            2014
-          ]
-        }
-      },
-      {
-        "largeur": 12
-      }
-    ]
-  }
-}
+coverage html
 ```

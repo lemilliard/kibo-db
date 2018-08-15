@@ -2,3 +2,6 @@
 __pycache__
 venv
 /databases
+
+.coverage
+coverage_report

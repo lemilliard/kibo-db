@@ -2,9 +2,9 @@ import os
 import json
 from typing import List
 
-from src.config import Config
-from src.admin_api.utils.file_utils import FileUtils
-from src.admin_api.utils import descriptor_utils
+from src.main.config import Config
+from src.main.common.utils.file_utils import FileUtils
+from src.main.admin_api.utils import descriptor_utils
 
 from .table import Table
 from .descriptor import Descriptor

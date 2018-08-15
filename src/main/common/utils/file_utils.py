@@ -2,7 +2,7 @@ import os
 import shutil
 from typing import List
 
-from src.config import Config
+from src.main.config import Config
 
 
 class FileUtils(object):
