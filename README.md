@@ -47,3 +47,25 @@ du projet.
 Pour le shell Windows, faire `start scriptDocker.bat`.
 
 Sur Git Bash, faire `sh scriptDocker.sh`
+
+## Tests unitaires
+
+Pour lancer les tests unitaires, faire la commande suivante depuis la racine:
+```
+python -m unittest -s src/test
+```
+
+Pour lancer les tests unitaires avec la couverture de tests, faire la commande suivante depuis la racine:
+```
+coverage run -m unittest discover src/test/
+```
+
+Pour récupérer le rapport de couverture de test:
+```
+coverage report -m
+```
+
+Pour générer le rapport de couverture en html:
+```
+coverage html
+```

@@ -1,10 +1,10 @@
 import json
 from typing import List
 
-from src.admin_api.model.database import Database
-from src.admin_api.model.table import Table
-from src.admin_api.utils.file_utils import FileUtils
-from src.config import Config
+from src.main.admin_api.model.database import Database
+from src.main.admin_api.model.table import Table
+from src.main.admin_api.utils.file_utils import FileUtils
+from src.main.config import Config
 
 
 class DescriptorUtils(object):
