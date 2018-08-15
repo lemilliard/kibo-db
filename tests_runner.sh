@@ -1,9 +1,27 @@
 #! /bin/bash
 
-p_help="--help"
-p_coverage="--coverage"
+a_help="help"
+a_coverage="coverage"
+a_open="open"
 
 out="tests_out.log"
+coverage_out=""
+
+main_command="run"
+
+for i in "$@"; do
+    case ${i} in
+        -h|--help)
+        main_command=${a_help}
+        ;;
+        -c|--coverage)
+        main_command=${a_coverage}
+        ;;
+        -o|--open)
+        second_command=${a_open}
+        ;;
+    esac
+done
 
 function is_in_venv() {
     is_venv=$(python is_venv.py)
@@ -66,12 +84,12 @@ function run_test_without_coverage() {
 }
 
 function open_test_coverage_report() {
+    echo ""
     echo "# Opening report..."
 
     start ./coverage_report/index.html
 
     echo "# Report opened!"
-    echo ""
 }
 
 function show_results() {
@@ -81,35 +99,38 @@ function show_results() {
 }
 
 function main() {
-    if [[ $1 = ${p_help} ]]; then
-        echo "##########################################################"
-        echo "##  test_runner.sh [--help] [--coverage]                ##"
-        echo "##     Script made to facilitate execution of tests     ##"
-        echo "##  Available parameters:                               ##"
-        echo "##   [--help]:     display this help box                ##"
-        echo "##   [--coverage]: run tests with coverage, generate    ##"
-        echo "##                 a report and automatically open it   ##"
-        echo "##                 in your browser                      ##"
-        echo "##########################################################"
+    if [[ ${main_command} = ${a_help} ]]; then
+        echo "#############################################################"
+        echo "##  test_runner.sh [-h|--help] [-c|--coverage] [-o|--open] ##"
+        echo "##     Script made to facilitate execution of tests        ##"
+        echo "##  Available parameters:                                  ##"
+        echo "##   [-h|---help]:     display this help box               ##"
+        echo "##   [-c|---coverage]: run tests with coverage, generate   ##"
+        echo "##                       a report and automatically        ##"
+        echo "##   [-o|--open]:      open report in browser              ##"
+        echo "#############################################################"
     else
-        if [[ $1 = ${p_coverage} ]]; then
+        if [[ ${main_command} = ${a_coverage} ]]; then
             run_test_with_coverage &
 
             wait $!
-
-            open_test_coverage_report
         else
             run_test_without_coverage &
 
             wait $!
         fi
+
         show_results
-        echo "# Done #"
+
+        echo "# Done"
     fi
 
+    if [[ ${second_command} = ${a_open} ]]; then
+        open_test_coverage_report
+    fi
 }
 
-main $1
+main
 
 
 

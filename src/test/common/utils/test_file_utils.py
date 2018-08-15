@@ -67,7 +67,7 @@ class TestFileUtils(unittest.TestCase):
         # Then
         self.assertEqual(expected_value, returned_value)
 
-    def test_delete_dir(self):
+    def test_delete_dir_1(self):
         # Given
         self.file_utils.does_file_exist = MagicMock(return_value=True)
         shutil.rmtree = MagicMock()
@@ -75,4 +75,15 @@ class TestFileUtils(unittest.TestCase):
         expected_value = True
         returned_value = self.file_utils.delete_dir('./databases')
         # Then
+        self.assertEqual(expected_value, returned_value)
+
+    def test_delete_dir_2(self):
+        # Given
+        self.file_utils.does_file_exist = MagicMock(return_value=False)
+        shutil.rmtree = MagicMock()
+        # When
+        expected_value = False
+        returned_value = self.file_utils.delete_dir('./databases')
+        # Then
+        shutil.rmtree.assert_not_called()
         self.assertEqual(expected_value, returned_value)
