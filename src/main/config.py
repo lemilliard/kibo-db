@@ -1,6 +1,6 @@
 class Config(object):
     port = 8500
-    files_directory = "../databases"
+    files_directory = "../../databases"
     data_directory = "data"
     index_directory = "index"
     json_separators = None
