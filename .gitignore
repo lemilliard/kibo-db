@@ -6,3 +6,4 @@ venv
 
 .coverage
 coverage_report
+tests_out.log

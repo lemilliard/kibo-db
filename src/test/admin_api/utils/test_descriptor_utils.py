@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
-from src.test.common.utils import DescriptorFactory
+from src.test.admin_api.utils.descriptor_factory import DescriptorFactory
 
 
 class TestDescriptorUtils(unittest.TestCase):
