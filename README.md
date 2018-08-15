@@ -44,11 +44,24 @@ développement.
 Pour cela, il suffit de cloner le projet et de lancer les commandes suivantes dans un terminal à la racine 
 du projet.
 
-Pour le shell Windows, faire `start scriptDocker.bat`.
+Pour le shell Windows, faire:
+```
+start ./scriptDocker.sh
+```
 
-Sur Git Bash, faire `sh scriptDocker.sh`
+Sur Git Bash, faire
+```
+sh ./scriptDocker.sh
+```
 
 ## Tests unitaires
+
+NB: Vous pouvez lancer les scripts et obtenir un rapport en faisant ceci:
+```
+sh ./test_runner.sh
+```
+
+<br/>
 
 Pour lancer les tests unitaires, faire la commande suivante depuis la racine:
 ```
