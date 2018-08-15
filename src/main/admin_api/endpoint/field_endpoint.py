@@ -1,8 +1,8 @@
 from flask import request
 
-from src.admin_api.model.field import Field
-from src.admin_api.utils.cleaner_utils import CleanerUtils
-from src.admin_api.utils.descriptor_utils import DescriptorUtils
+from src.main.admin_api.model.field import Field
+from src.main.admin_api.utils.cleaner_utils import CleanerUtils
+from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
 from . import endpoint
 
 

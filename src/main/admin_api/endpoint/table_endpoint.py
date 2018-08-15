@@ -1,7 +1,7 @@
 from flask import request
 
-from src.admin_api.model.table import Table
-from src.admin_api.utils.descriptor_utils import DescriptorUtils
+from src.main.admin_api.model.table import Table
+from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
 from . import endpoint
 
 

@@ -1,8 +1,8 @@
 import os
 import json
 
-from src.config import Config
-from src.admin_api.utils.file_utils import FileUtils
+from src.main.config import Config
+from src.main.admin_api.utils.file_utils import FileUtils
 
 from .field import Field
 from .descriptor import Descriptor
