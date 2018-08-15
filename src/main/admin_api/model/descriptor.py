@@ -1,4 +1,4 @@
-from src.main.admin_api.utils.cleaner_utils import CleanerUtils
+from src.main.common.utils.cleaner_utils import CleanerUtils
 
 
 class Descriptor(object):

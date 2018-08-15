@@ -1,97 +1,93 @@
-from flask import request
-
+from src.main.common.model import endpoint
 from src.main.admin_api.model.field import Field
-from src.main.admin_api.utils.cleaner_utils import CleanerUtils
+from src.main.common.utils.cleaner_utils import CleanerUtils
 from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
-from . import endpoint
 
 
 class FieldEndpoint(endpoint.Endpoint):
 
-    @staticmethod
-    def process_request(_db_system_name: str, _tb_system_name: str, _fd_system_name: str = None):
-        _response = "T'es con"
-        if request.method == "GET":
-            _response = FieldEndpoint.do_get(_db_system_name, _tb_system_name, _fd_system_name)
-        elif request.method == "POST":
-            _response = FieldEndpoint.do_post(_db_system_name, _tb_system_name)
-        elif request.method == "PUT":
-            _response = FieldEndpoint.do_put(_db_system_name, _tb_system_name, _fd_system_name)
-        elif request.method == "DELETE":
-            _response = FieldEndpoint.do_delete(_db_system_name, _tb_system_name, _fd_system_name)
-        return _response
-
-    @staticmethod
-    def do_get(_db_system_name: str, _tb_system_name: str, _fd_system_name: str = None):
-        _response = None
-        _descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(_db_system_name, _tb_system_name)
-        if _descriptor is not None:
-            if _fd_system_name is None:
-                _fields = []
-                for _field in _descriptor.get_fields():
-                    _fields.append(_field.to_dict())
-                _response = _fields
+    @classmethod
+    def do_get(cls, *args, **kwargs):
+        db_system_name = kwargs.get("db_system_name")
+        tb_system_name = kwargs.get("tb_system_name")
+        fd_system_name = kwargs.get("fd_system_name", None)
+        response = None
+        descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(db_system_name, tb_system_name)
+        if descriptor is not None:
+            if fd_system_name is None:
+                fields = []
+                for f in descriptor.get_fields():
+                    fields.append(f.to_dict())
+                response = fields
             else:
-                _field = _descriptor.get_field_by_system_name(_fd_system_name)
-                if _field is not None:
-                    _response = _field.to_dict()
-        return _response
+                field = descriptor.get_field_by_system_name(fd_system_name)
+                if field is not None:
+                    response = field.to_dict()
+        return response
 
-    @staticmethod
-    def do_post(_db_system_name: str, _tb_system_name: str):
-        _response = None
-        _descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(_db_system_name, _tb_system_name)
-        if _descriptor is not None:
-            _body = FieldEndpoint.get_body()
-            _name = _body.get("name", None)
-            if _name is not None:
-                _fd_system_name = CleanerUtils.generate_system_name(_name)
-                if _descriptor.get_field_by_system_name(_fd_system_name) is None:
-                    _id = _body.get("id", False)
-                    _description = _body.get("description", None)
-                    _type = _body.get("type", "string")
-                    _field = Field(
-                        id=_id,
-                        name=_name,
-                        description=_description,
-                        type=_type
+    @classmethod
+    def do_post(cls, *args, **kwargs):
+        db_system_name = kwargs.get("db_system_name")
+        tb_system_name = kwargs.get("tb_system_name")
+        response = None
+        descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(db_system_name, tb_system_name)
+        if descriptor is not None:
+            body = FieldEndpoint.get_body()
+            name = body.get("name", None)
+            if name is not None:
+                fd_system_name = CleanerUtils.generate_system_name(name)
+                if descriptor.get_field_by_system_name(fd_system_name) is None:
+                    id_ = body.get("id", False)
+                    description = body.get("description", None)
+                    type_ = body.get("type", "string")
+                    field = Field(
+                        id=id_,
+                        name=name,
+                        description=description,
+                        type=type_
                     )
-                    _descriptor.add_field(_field)
-                    _descriptor.save(_db_system_name)
-                    _response = _field.to_dict()
-        return _response
+                    descriptor.add_field(field)
+                    descriptor.save(db_system_name)
+                    response = field.to_dict()
+        return response
 
-    @staticmethod
-    def do_put(_db_system_name: str, _tb_system_name: str, _fd_system_name: str):
-        _response = None
-        _descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(_db_system_name, _tb_system_name)
-        if _descriptor is not None:
-            _body = FieldEndpoint.get_body()
-            if _fd_system_name is not None:
-                _field = _descriptor.get_field_by_system_name(_fd_system_name)
-                if _field is not None:
-                    _id = _body.get("id", None)
-                    if _id is not None:
-                        _field.set_id(_id)
-                    _name = _body.get("name", None)
-                    if _name is not None:
-                        _field.set_name(_name)
-                    _description = _body.get("description", None)
-                    if _description is not None:
-                        _field.set_description(_description)
-                    _type = _body.get("type", None)
-                    if _type is not None:
-                        _field.set_type(_type)
-                    if _descriptor.update_field(_field):
-                        _response = _field.to_dict()
-                        _descriptor.save(_db_system_name)
-        return _response
+    @classmethod
+    def do_put(cls, *args, **kwargs):
+        db_system_name = kwargs.get("db_system_name")
+        tb_system_name = kwargs.get("tb_system_name")
+        fd_system_name = kwargs.get("fd_system_name")
+        response = None
+        descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(db_system_name, tb_system_name)
+        if descriptor is not None:
+            body = FieldEndpoint.get_body()
+            if fd_system_name is not None:
+                field = descriptor.get_field_by_system_name(fd_system_name)
+                if field is not None:
+                    id_ = body.get("id", None)
+                    if id_ is not None:
+                        field.set_id(id_)
+                    name = body.get("name", None)
+                    if name is not None:
+                        field.set_name(name)
+                    description = body.get("description", None)
+                    if description is not None:
+                        field.set_description(description)
+                    type_ = body.get("type", None)
+                    if type_ is not None:
+                        field.set_type(type_)
+                    if descriptor.update_field(field):
+                        response = field.to_dict()
+                        descriptor.save(db_system_name)
+        return response
 
-    @staticmethod
-    def do_delete(_db_system_name: str, _tb_system_name: str, _fd_system_name: str):
-        _response = None
-        _descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(_db_system_name, _tb_system_name)
-        if _descriptor is not None:
-            _response = _descriptor.remove_field(_fd_system_name)
-            _descriptor.save(_db_system_name)
-        return _response
+    @classmethod
+    def do_delete(cls, *args, **kwargs):
+        db_system_name = kwargs.get("db_system_name")
+        tb_system_name = kwargs.get("tb_system_name")
+        fd_system_name = kwargs.get("fd_system_name")
+        response = None
+        descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(db_system_name, tb_system_name)
+        if descriptor is not None:
+            response = descriptor.remove_field(fd_system_name)
+            descriptor.save(db_system_name)
+        return response

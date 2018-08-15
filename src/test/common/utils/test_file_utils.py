@@ -1,12 +1,10 @@
 import unittest
-from unittest.mock import Mock
 from unittest.mock import MagicMock
-from unittest.mock import patch
 
 import os
 import shutil
 
-from src.main.admin_api.utils.file_utils import FileUtils
+from src.main.common.utils.file_utils import FileUtils
 
 
 class TestFileUtils(unittest.TestCase):

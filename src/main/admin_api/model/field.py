@@ -1,7 +1,7 @@
 import os
 import json
 
-from src.main.admin_api.utils.file_utils import FileUtils
+from src.main.common.utils.file_utils import FileUtils
 from src.main.config import Config
 from .descriptor import Descriptor
 

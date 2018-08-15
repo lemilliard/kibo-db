@@ -1,76 +1,68 @@
-from flask import request
-
+from src.main.common.model import endpoint
 from src.main.admin_api.model.table import Table
 from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
-from . import endpoint
 
 
 class TableEndpoint(endpoint.Endpoint):
 
-    @staticmethod
-    def process_request(_db_system_name: str, _tb_system_name: str = None):
-        _response = "T'es con"
-        if request.method == "GET":
-            _response = TableEndpoint.do_get(_db_system_name, _tb_system_name)
-        elif request.method == "POST":
-            _response = TableEndpoint.do_post(_db_system_name)
-        elif request.method == "PUT":
-            _response = TableEndpoint.do_put(_db_system_name, _tb_system_name)
-        elif request.method == "DELETE":
-            _response = TableEndpoint.do_delete(_db_system_name, _tb_system_name)
-        return _response
-
-    @staticmethod
-    def do_get(_db_system_name: str, _tb_system_name: str = None):
-        _response = None
-        if _tb_system_name is None:
-            _descriptor_dicts = []
-            _descriptors = DescriptorUtils.get_tbs_descriptor(_db_system_name)
-            for _descriptor in _descriptors:
-                _descriptor_dicts.append(_descriptor.to_dict())
-            _response = _descriptor_dicts
+    @classmethod
+    def do_get(cls, *args, **kwargs):
+        db_system_name = kwargs.get("db_system_name")
+        tb_system_name = kwargs.get("tb_system_name", None)
+        response = None
+        if tb_system_name is None:
+            descriptor_dicts = []
+            descriptors = DescriptorUtils.get_tbs_descriptor(db_system_name)
+            for d in descriptors:
+                descriptor_dicts.append(d.to_dict())
+            response = descriptor_dicts
         else:
-            _descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(_db_system_name, _tb_system_name)
-            if _descriptor is not None:
-                _response = _descriptor.to_dict()
-        return _response
+            descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(db_system_name, tb_system_name)
+            if descriptor is not None:
+                response = descriptor.to_dict()
+        return response
 
-    @staticmethod
-    def do_post(_db_system_name):
-        _response = None
-        _body = TableEndpoint.get_body()
-        _name = _body.get("name", None)
-        if _name is not None:
-            _descriptor = Table.from_json(_body)
-            if not DescriptorUtils.does_tb_descriptor_exist(_db_system_name, _descriptor):
-                _descriptor.save(_db_system_name)
-                _response = _descriptor.to_dict()
-        return _response
+    @classmethod
+    def do_post(cls, *args, **kwargs):
+        db_system_name = kwargs.get("db_system_name")
+        response = None
+        body = TableEndpoint.get_body()
+        name = body.get("name", None)
+        if name is not None:
+            descriptor = Table.from_json(body)
+            if not DescriptorUtils.does_tb_descriptor_exist(db_system_name, descriptor):
+                descriptor.save(db_system_name)
+                response = descriptor.to_dict()
+        return response
 
-    @staticmethod
-    def do_put(_db_system_name: str, _tb_system_name: str):
-        _response = None
-        _body = TableEndpoint.get_body()
-        if _tb_system_name is not None:
-            _descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(_db_system_name, _tb_system_name)
-            if _descriptor is not None:
-                _name = _body.get("name", None)
-                if _name is not None:
-                    _descriptor.set_name(_name)
-                _description = _body.get("description", None)
-                if _description is not None:
-                    _descriptor.set_description(_description)
-                _fields = _body.get("fields", None)
-                if _fields is not None:
-                    _descriptor.set_fields(_fields)
-                _descriptor.save(_db_system_name)
-                _response = _descriptor.to_dict()
-        return _response
+    @classmethod
+    def do_put(cls, *args, **kwargs):
+        db_system_name = kwargs.get("db_system_name")
+        tb_system_name = kwargs.get("tb_system_name")
+        response = None
+        body = TableEndpoint.get_body()
+        if tb_system_name is not None:
+            descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(db_system_name, tb_system_name)
+            if descriptor is not None:
+                name = body.get("name", None)
+                if name is not None:
+                    descriptor.set_name(name)
+                description = body.get("description", None)
+                if description is not None:
+                    descriptor.set_description(description)
+                fields = body.get("fields", None)
+                if fields is not None:
+                    descriptor.set_fields(fields)
+                descriptor.save(db_system_name)
+                response = descriptor.to_dict()
+        return response
 
-    @staticmethod
-    def do_delete(_db_system_name: str, _tb_system_name: str):
-        _response = None
-        _descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(_db_system_name, _tb_system_name)
-        if _descriptor is not None:
-            _response = _descriptor.delete(_db_system_name)
-        return _response
+    @classmethod
+    def do_delete(cls, *args, **kwargs):
+        db_system_name = kwargs.get("db_system_name")
+        tb_system_name = kwargs.get("tb_system_name")
+        response = None
+        descriptor = DescriptorUtils.get_tb_descriptor_by_system_name(db_system_name, tb_system_name)
+        if descriptor is not None:
+            response = descriptor.delete(db_system_name)
+        return response
