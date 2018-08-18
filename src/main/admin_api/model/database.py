@@ -1,54 +1,58 @@
-import os
-import json
-from typing import List
-
-from src.main.config import Config
-from src.main.common.utils.file_utils import FileUtils
-from src.main.admin_api.utils import descriptor_utils
-
-from .table import Table
-from .descriptor import Descriptor
+from src.main.admin_api.model import descriptor
 
 
-class Database(Descriptor):
+class Database(descriptor.Descriptor):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._tables: List[Table] = kwargs.get("tables", [])
+        self._tables = kwargs.get("tables", [])
 
     def save(self):
-        _dir_path = self.get_dir_path()
-        if not os.path.exists(_dir_path):
-            os.makedirs(_dir_path)
-        _file = open(self.get_file_path(), "w")
-        json.dump(self.to_dict(), _file, indent=Config.json_indent, separators=Config.json_separators)
-        _file.close()
+        import os
+        import json
+        from src.main.config import Config
+
+        dir_path = self.get_dir_path()
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+        file = open(self.get_file_path(), "w")
+        json.dump(self.to_dict(), file, indent=Config.json_indent, separators=Config.json_separators)
+        file.close()
 
     def delete(self) -> bool:
+        from src.main.common.utils.file_utils import FileUtils
+
         return FileUtils.delete_dir(self.get_dir_path())
 
     def get_dir_path(self) -> str:
-        return FileUtils.join_path(Config.files_directory, self._system_name)
+        from src.main.config import Config
+        from src.main.common.utils.file_utils import FileUtils
+
+        return FileUtils.join_path(Config.files_directory, self.system_name)
 
     def get_file_path(self) -> str:
-        return FileUtils.join_path(self.get_dir_path(), self._system_name + ".json")
+        from src.main.common.utils.file_utils import FileUtils
+
+        return FileUtils.join_path(self.get_dir_path(), self.system_name + ".json")
 
     @staticmethod
     def from_json(_json: dict):
-        _name = _json.get("name", None)
-        _description = _json.get("description", None)
-        _system_name = _json.get("system_name", None)
+        name = _json.get("name", None)
+        description = _json.get("description", None)
+        system_name = _json.get("system_name", None)
         return Database(
-            name=_name,
-            description=_description,
-            system_name=_system_name
+            name=name,
+            description=description,
+            system_name=system_name
         )
 
-    def to_dict(self, _with_details: bool = False) -> dict:
+    def to_dict(self, with_details: bool = False) -> dict:
+        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+
         _dict = super().to_dict()
-        _tables = descriptor_utils.DescriptorUtils.get_tbs_descriptor(self.get_system_name())
-        if _with_details:
+        tables = DescriptorUtils.get_tbs_descriptor(self.get_system_name())
+        if with_details:
             _dict["tables"] = []
-            for _table in _tables:
-                _dict["tables"].append(_table.to_dict())
+            for table in tables:
+                _dict["tables"].append(table.to_dict())
         return _dict

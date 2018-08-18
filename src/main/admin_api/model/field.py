@@ -1,12 +1,7 @@
-import os
-import json
-
-from src.main.common.utils.file_utils import FileUtils
-from src.main.config import Config
-from .descriptor import Descriptor
+from src.main.admin_api.model import descriptor
 
 
-class Field(Descriptor):
+class Field(descriptor.Descriptor):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,18 +20,25 @@ class Field(Descriptor):
     def set_type(self, _type: str):
         self._type = _type
 
-    def get_index_dir_path(self, _db_system_name: str, _tb_system_name: str) -> str:
-        _db_path = FileUtils.join_path(Config.files_directory, _db_system_name)
-        _tb_path = FileUtils.join_path(_db_path, _tb_system_name)
-        _tb_index_path = FileUtils.join_path(_tb_path, Config.index_directory)
-        return FileUtils.join_path(_tb_index_path, self._system_name + ".json")
+    def get_index_dir_path(self, db_system_name: str, tb_system_name: str) -> str:
+        from src.main.config import Config
+        from src.main.common.utils.file_utils import FileUtils
 
-    def save(self, _db_system_name: str, _tb_system_name: str):
-        _index_file_path = self.get_index_dir_path(_db_system_name, _tb_system_name)
-        if not os.path.exists(_index_file_path):
-            _file = open(_index_file_path, "w")
-            json.dump([], _file, indent=Config.json_indent, separators=Config.json_separators)
-            _file.close()
+        db_path = FileUtils.join_path(Config.files_directory, db_system_name)
+        tb_path = FileUtils.join_path(db_path, tb_system_name)
+        tb_index_path = FileUtils.join_path(tb_path, Config.index_directory)
+        return FileUtils.join_path(tb_index_path, self.system_name + ".json")
+
+    def save(self, db_system_name: str, tb_system_name: str):
+        import os
+        import json
+        from src.main.config import Config
+
+        index_file_path = self.get_index_dir_path(db_system_name, tb_system_name)
+        if not os.path.exists(index_file_path):
+            file = open(index_file_path, "w")
+            json.dump([], file, indent=Config.json_indent, separators=Config.json_separators)
+            file.close()
 
     @staticmethod
     def from_json(_json: dict):
@@ -53,7 +55,7 @@ class Field(Descriptor):
             type=_type
         )
 
-    def to_dict(self, _with_details: bool = False):
+    def to_dict(self, with_details: bool = False):
         _dict = super().to_dict()
         _dict["id"] = self._id
         _dict["type"] = self._type

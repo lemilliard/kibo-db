@@ -1,12 +1,12 @@
 from src.main.common.model import endpoint
-from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
-from src.main.admin_api.model.database import Database
 
 
 class DatabaseEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_get(cls, *args, **kwargs):
+        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+
         db_system_name = kwargs.get("db_system_name", None)
         response = None
         if db_system_name is None:
@@ -23,6 +23,9 @@ class DatabaseEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_post(cls, *args, **kwargs):
+        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.admin_api.model.database import Database
+
         response = None
         body = DatabaseEndpoint.get_body()
         name = body.get("name", None)
@@ -35,6 +38,8 @@ class DatabaseEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_put(cls, *args, **kwargs):
+        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+
         db_system_name = kwargs.get("db_system_name", None)
         response = None
         body = DatabaseEndpoint.get_body()
@@ -53,6 +58,8 @@ class DatabaseEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_delete(cls, *args, **kwargs):
+        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+
         db_system_name = kwargs.get("db_system_name")
         response = None
         descriptor = DescriptorUtils.get_db_descriptor_by_system_name(db_system_name)
