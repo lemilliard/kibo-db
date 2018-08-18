@@ -87,7 +87,7 @@ function open_test_coverage_report() {
     echo ""
     echo "# Opening report..."
 
-    start ./coverage_report/index.html
+    start ./.coverage_report/index.html
 
     echo "# Report opened!"
 }

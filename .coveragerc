@@ -5,5 +5,5 @@ omit =
     src/test/*
 
 [html]
-directory = coverage_report
+directory = .coverage_report
 extra_css = coverage_report.css

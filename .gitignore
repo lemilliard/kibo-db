@@ -5,5 +5,5 @@ venv
 /databases
 
 .coverage
-coverage_report
+.coverage_report
 tests_out.log
