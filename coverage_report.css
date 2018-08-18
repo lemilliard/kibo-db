@@ -1,0 +1,78 @@
+html {
+    background: #333;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+}
+
+#header {
+    background: #222;
+}
+
+#index th {
+    background: #222;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+}
+
+#index th.headerSortDown, #index th.headerSortUp {
+    border-bottom: 1px solid #000;
+    white-space: nowrap;
+    background: #444;
+}
+
+#index tr.file:hover {
+    background: #444;
+}
+
+#index tr {
+    color: #DDD !important;
+}
+
+#index a {
+    color: #DDD !important;
+}
+
+.stats span.run, .text p.run {
+    background: #588;
+}
+
+.stats span.mis, .text p.mis {
+    background: #644;
+}
+
+.stats span.exc, .text p.exc {
+    background: black;
+}
+
+.stats span.par, .text p.run.par, .text p.par.hide_run {
+    background: grey;
+}
+
+.text p {
+    border-left: 5px solid #444;
+}
+
+.text p.run, .text p.run.hide_par {
+    border-left: 5px solid #7BB;
+}
+
+.text p.mis {
+    border-left: 5px solid #B33;
+}
+
+.text p.par.hide_run, .text p.run.par {
+    border-left: 5px solid lightgrey;
+}
+
+.text p.run.hide_par {
+    background: inherit;
+    border-left: 5px solid lightgrey;
+}
+
+.text p.hide_run, .text p.hide_mis, .text p.hide_run.hide_par {
+    background: inherit;
+}
+
+.str {
+    color: white !important;
+}

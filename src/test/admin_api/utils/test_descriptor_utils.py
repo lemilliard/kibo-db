@@ -1,13 +1,13 @@
 import unittest
 from unittest.mock import MagicMock
 
-from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
-from src.test.admin_api.utils.descriptor_factory import DescriptorFactory
-
 
 class TestDescriptorUtils(unittest.TestCase):
 
     def setUp(self):
+        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.test.test_factory.descriptor_factory import DescriptorFactory
+
         """Prépare les tests"""
         # Init mocked classes
         self.descriptor_utils = DescriptorUtils
@@ -41,6 +41,8 @@ class TestDescriptorUtils(unittest.TestCase):
 
     def test_does_tb_descriptor_exist_1(self):
         """Vérifie que la méthode renvoie True quand la table existe"""
+        from src.test.test_factory.descriptor_factory import DescriptorFactory
+
         # Given
         self.descriptor_utils \
             .get_tb_descriptor_by_system_name = MagicMock(return_value=self.table)
@@ -53,6 +55,8 @@ class TestDescriptorUtils(unittest.TestCase):
 
     def test_does_tb_descriptor_exist_2(self):
         """Vérifie que la méthode renvoie False quand la table n'existe pas"""
+        from src.test.test_factory.descriptor_factory import DescriptorFactory
+
         # Given
         self.descriptor_utils \
             .get_tb_descriptor_by_system_name = MagicMock(return_value=None)

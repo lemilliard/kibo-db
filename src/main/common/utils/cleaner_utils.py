@@ -8,7 +8,7 @@ class CleanerUtils(object):
         clean_name = re.sub("'", " ", name)
         clean_name = unidecode.unidecode(clean_name)
         clean_name = re.sub("[^0-9a-zA-Z ]", "", clean_name)
-        clean_name = re.sub("\s+", " ", clean_name)
+        clean_name = re.sub("\\s+", " ", clean_name)
         return clean_name
 
     @staticmethod
