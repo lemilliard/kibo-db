@@ -6,3 +6,4 @@ omit =
 
 [html]
 directory = coverage_report
+extra_css = coverage_report.css

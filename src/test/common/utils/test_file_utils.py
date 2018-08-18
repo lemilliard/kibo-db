@@ -1,15 +1,15 @@
-import unittest
-from unittest.mock import MagicMock
-
 import os
 import shutil
 
-from src.main.common.utils.file_utils import FileUtils
+import unittest
+from unittest.mock import MagicMock
 
 
 class TestFileUtils(unittest.TestCase):
 
     def setUp(self):
+        from src.main.common.utils.file_utils import FileUtils
+
         """Prépare les tests"""
         # Init mocked classes
         self.file_utils = FileUtils
