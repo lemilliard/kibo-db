@@ -10,13 +10,13 @@ class Database(descriptor.Descriptor):
     def save(self):
         import os
         import json
-        from src.main.config import Config
+        from src.main.config import active_config
 
         dir_path = self.get_dir_path()
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
         file = open(self.get_file_path(), "w")
-        json.dump(self.to_dict(), file, indent=Config.json_indent, separators=Config.json_separators)
+        json.dump(self.to_dict(), file, indent=active_config.json_indent, separators=active_config.json_separators)
         file.close()
 
     def delete(self) -> bool:
@@ -25,10 +25,10 @@ class Database(descriptor.Descriptor):
         return FileUtils.delete_dir(self.get_dir_path())
 
     def get_dir_path(self) -> str:
-        from src.main.config import Config
+        from src.main.config import active_config
         from src.main.common.utils.file_utils import FileUtils
 
-        return FileUtils.join_path(Config.files_directory, self.system_name)
+        return FileUtils.join_path(active_config.files_directory, self.system_name)
 
     def get_file_path(self) -> str:
         from src.main.common.utils.file_utils import FileUtils

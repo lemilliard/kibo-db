@@ -21,23 +21,23 @@ class Field(descriptor.Descriptor):
         self._type = _type
 
     def get_index_dir_path(self, db_system_name: str, tb_system_name: str) -> str:
-        from src.main.config import Config
+        from src.main.config import active_config
         from src.main.common.utils.file_utils import FileUtils
 
-        db_path = FileUtils.join_path(Config.files_directory, db_system_name)
+        db_path = FileUtils.join_path(active_config.files_directory, db_system_name)
         tb_path = FileUtils.join_path(db_path, tb_system_name)
-        tb_index_path = FileUtils.join_path(tb_path, Config.index_directory)
+        tb_index_path = FileUtils.join_path(tb_path, active_config.index_directory)
         return FileUtils.join_path(tb_index_path, self.system_name + ".json")
 
     def save(self, db_system_name: str, tb_system_name: str):
         import os
         import json
-        from src.main.config import Config
+        from src.main.config import active_config
 
         index_file_path = self.get_index_dir_path(db_system_name, tb_system_name)
         if not os.path.exists(index_file_path):
             file = open(index_file_path, "w")
-            json.dump([], file, indent=Config.json_indent, separators=Config.json_separators)
+            json.dump([], file, indent=active_config.json_indent, separators=active_config.json_separators)
             file.close()
 
     @staticmethod

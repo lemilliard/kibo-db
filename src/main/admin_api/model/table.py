@@ -69,7 +69,7 @@ class Table(descriptor.Descriptor):
     def save(self, db_system_name: str):
         import os
         import json
-        from src.main.config import Config
+        from src.main.config import active_config
 
         if self.get_name() is not None and \
                 self.get_system_name() is not None:
@@ -83,7 +83,7 @@ class Table(descriptor.Descriptor):
             if not os.path.exists(index_path):
                 os.makedirs(index_path)
             file = open(self.get_file_path(db_system_name), "w")
-            json.dump(self.to_dict(), file, indent=Config.json_indent, separators=Config.json_separators)
+            json.dump(self.to_dict(), file, indent=active_config.json_indent, separators=active_config.json_separators)
             file.close()
             for field in self.fields:
                 field.save(db_system_name, self.system_name)
@@ -94,25 +94,25 @@ class Table(descriptor.Descriptor):
         return FileUtils.delete_dir(self.get_dir_path(db_system_name))
 
     def get_dir_path(self, db_system_name: str) -> str:
-        from src.main.config import Config
+        from src.main.config import active_config
         from src.main.common.utils.file_utils import FileUtils
 
-        db_path = FileUtils.join_path(Config.files_directory, db_system_name)
+        db_path = FileUtils.join_path(active_config.files_directory, db_system_name)
         return FileUtils.join_path(db_path, self.system_name)
 
     def get_data_dir_path(self, db_system_name: str) -> str:
-        from src.main.config import Config
+        from src.main.config import active_config
         from src.main.common.utils.file_utils import FileUtils
 
         tb_path = self.get_dir_path(db_system_name)
-        return FileUtils.join_path(tb_path, Config.data_directory)
+        return FileUtils.join_path(tb_path, active_config.data_directory)
 
     def get_index_dir_path(self, db_system_name: str) -> str:
-        from src.main.config import Config
+        from src.main.config import active_config
         from src.main.common.utils.file_utils import FileUtils
 
         tb_path = self.get_dir_path(db_system_name)
-        return FileUtils.join_path(tb_path, Config.index_directory)
+        return FileUtils.join_path(tb_path, active_config.index_directory)
 
     def get_file_path(self, _db_system_name: str) -> str:
         from src.main.common.utils.file_utils import FileUtils
