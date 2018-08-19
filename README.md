@@ -61,8 +61,6 @@ NB: Vous pouvez lancer les scripts et obtenir un rapport en faisant ceci:
 sh ./test_runner.sh
 ```
 
-<br/>
-
 Pour lancer les tests unitaires, faire la commande suivante depuis la racine:
 ```
 python -m unittest -s src/test
@@ -82,3 +80,17 @@ Pour générer le rapport de couverture en html:
 ```
 coverage html
 ```
+
+## Build un exécutable
+
+Il est possible de builder KiboDB en un exécutable fonctionnant seul. Pour cela, nous utilisons PyInstaller
+et la commande nécessaire au build en exécutable est la suivante:
+
+```
+pyinstaller src/main/main.py --onefile --name kibodb
+```
+
+L'exécutable généré se trouvera dans le répertoire dist à la racine du projet.
+
+Pour générer un exécutable compatible avec une plateforme (Linux ou Windows uniquement) il faut 
+exécuter PyInstaller sur la même plateforme.
