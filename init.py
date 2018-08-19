@@ -1,9 +1,9 @@
 import requests
 import json
 
-from src.config import Config
+from src.main.config import active_config
 
-base_url = "http://localhost:" + str(Config.port)
+base_url = "http://localhost:" + str(active_config.port)
 headers = {'Content-Type': 'application/json'}
 
 
