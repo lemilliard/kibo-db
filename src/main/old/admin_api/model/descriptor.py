@@ -1,7 +1,7 @@
 class Descriptor(object):
 
     def __init__(self, *args, **kwargs):
-        from src.main.common.utils.cleaner_utils import CleanerUtils
+        from src.main.old.common.utils.cleaner_utils import CleanerUtils
 
         self.name = kwargs.get("name", None)
         self.description = kwargs.get("description", None)

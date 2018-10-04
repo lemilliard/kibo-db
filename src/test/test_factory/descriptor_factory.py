@@ -1,5 +1,5 @@
-from src.main.admin_api.model.database import Database
-from src.main.admin_api.model.table import Table
+from src.main.old.admin_api.model.database import Database
+from src.main.old.admin_api.model.table import Table
 
 
 class DescriptorFactory(object):

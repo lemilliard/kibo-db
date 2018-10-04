@@ -1,4 +1,4 @@
-from src.main.admin_api.model import descriptor
+from src.main.old.admin_api.model import descriptor
 
 
 class Field(descriptor.Descriptor):
@@ -21,8 +21,8 @@ class Field(descriptor.Descriptor):
         self._type = _type
 
     def get_index_dir_path(self, db_system_name: str, tb_system_name: str) -> str:
-        from src.main.config import active_config
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.config import active_config
+        from src.main.old.common.utils.file_utils import FileUtils
 
         db_path = FileUtils.join_path(active_config.files_directory, db_system_name)
         tb_path = FileUtils.join_path(db_path, tb_system_name)
@@ -32,7 +32,7 @@ class Field(descriptor.Descriptor):
     def save(self, db_system_name: str, tb_system_name: str):
         import os
         import json
-        from src.main.config import active_config
+        from src.main.old.config import active_config
 
         index_file_path = self.get_index_dir_path(db_system_name, tb_system_name)
         if not os.path.exists(index_file_path):

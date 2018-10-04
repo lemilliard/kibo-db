@@ -1,11 +1,11 @@
-from src.main.common.model import endpoint
+from src.main.old.common.model import endpoint
 
 
 class FieldEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_get(cls, *args, **kwargs):
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
 
         db_system_name = kwargs.get("db_system_name")
         tb_system_name = kwargs.get("tb_system_name")
@@ -26,9 +26,9 @@ class FieldEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_post(cls, *args, **kwargs):
-        from src.main.common.utils.cleaner_utils import CleanerUtils
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
-        from src.main.admin_api.model.field import Field
+        from src.main.old.common.utils.cleaner_utils import CleanerUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.model.field import Field
 
         db_system_name = kwargs.get("db_system_name")
         tb_system_name = kwargs.get("tb_system_name")
@@ -56,7 +56,7 @@ class FieldEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_put(cls, *args, **kwargs):
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
 
         db_system_name = kwargs.get("db_system_name")
         tb_system_name = kwargs.get("tb_system_name")
@@ -87,7 +87,7 @@ class FieldEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_delete(cls, *args, **kwargs):
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
 
         db_system_name = kwargs.get("db_system_name")
         tb_system_name = kwargs.get("tb_system_name")

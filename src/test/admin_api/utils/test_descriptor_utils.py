@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 class TestDescriptorUtils(unittest.TestCase):
 
     def setUp(self):
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
         from src.test.test_factory.descriptor_factory import DescriptorFactory
 
         """Prépare les tests"""

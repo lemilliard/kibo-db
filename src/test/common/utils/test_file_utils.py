@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 class TestFileUtils(unittest.TestCase):
 
     def setUp(self):
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.common.utils.file_utils import FileUtils
 
         """Prépare les tests"""
         # Init mocked classes

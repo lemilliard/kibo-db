@@ -1,4 +1,4 @@
-from src.main.admin_api.model import descriptor
+from src.main.old.admin_api.model import descriptor
 
 
 class Table(descriptor.Descriptor):
@@ -43,7 +43,7 @@ class Table(descriptor.Descriptor):
 
     @staticmethod
     def from_json(_json: dict):
-        from src.main.admin_api.model.field import Field
+        from src.main.old.admin_api.model.field import Field
 
         name = _json.get("name", None)
         description = _json.get("description", None)
@@ -69,7 +69,7 @@ class Table(descriptor.Descriptor):
     def save(self, db_system_name: str):
         import os
         import json
-        from src.main.config import active_config
+        from src.main.old.config import active_config
 
         if self.get_name() is not None and \
                 self.get_system_name() is not None:
@@ -89,32 +89,32 @@ class Table(descriptor.Descriptor):
                 field.save(db_system_name, self.system_name)
 
     def delete(self, db_system_name: str) -> bool:
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.common.utils.file_utils import FileUtils
 
         return FileUtils.delete_dir(self.get_dir_path(db_system_name))
 
     def get_dir_path(self, db_system_name: str) -> str:
-        from src.main.config import active_config
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.config import active_config
+        from src.main.old.common.utils.file_utils import FileUtils
 
         db_path = FileUtils.join_path(active_config.files_directory, db_system_name)
         return FileUtils.join_path(db_path, self.system_name)
 
     def get_data_dir_path(self, db_system_name: str) -> str:
-        from src.main.config import active_config
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.config import active_config
+        from src.main.old.common.utils.file_utils import FileUtils
 
         tb_path = self.get_dir_path(db_system_name)
         return FileUtils.join_path(tb_path, active_config.data_directory)
 
     def get_index_dir_path(self, db_system_name: str) -> str:
-        from src.main.config import active_config
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.config import active_config
+        from src.main.old.common.utils.file_utils import FileUtils
 
         tb_path = self.get_dir_path(db_system_name)
         return FileUtils.join_path(tb_path, active_config.index_directory)
 
     def get_file_path(self, _db_system_name: str) -> str:
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.common.utils.file_utils import FileUtils
 
         return FileUtils.join_path(self.get_dir_path(_db_system_name), self.system_name + ".json")

@@ -1,4 +1,4 @@
-from src.main.common.model import endpoint
+from src.main.old.common.model import endpoint
 
 
 class SystemEndpoint(endpoint.Endpoint):

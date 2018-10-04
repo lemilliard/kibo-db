@@ -1,4 +1,4 @@
-from src.main.admin_api.model import descriptor
+from src.main.old.admin_api.model import descriptor
 
 
 class Database(descriptor.Descriptor):
@@ -10,7 +10,7 @@ class Database(descriptor.Descriptor):
     def save(self):
         import os
         import json
-        from src.main.config import active_config
+        from src.main.old.config import active_config
 
         dir_path = self.get_dir_path()
         if not os.path.exists(dir_path):
@@ -20,18 +20,18 @@ class Database(descriptor.Descriptor):
         file.close()
 
     def delete(self) -> bool:
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.common.utils.file_utils import FileUtils
 
         return FileUtils.delete_dir(self.get_dir_path())
 
     def get_dir_path(self) -> str:
-        from src.main.config import active_config
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.config import active_config
+        from src.main.old.common.utils.file_utils import FileUtils
 
         return FileUtils.join_path(active_config.files_directory, self.system_name)
 
     def get_file_path(self) -> str:
-        from src.main.common.utils.file_utils import FileUtils
+        from src.main.old.common.utils.file_utils import FileUtils
 
         return FileUtils.join_path(self.get_dir_path(), self.system_name + ".json")
 
@@ -47,7 +47,7 @@ class Database(descriptor.Descriptor):
         )
 
     def to_dict(self, with_details: bool = False) -> dict:
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
 
         _dict = super().to_dict()
         tables = DescriptorUtils.get_tbs_descriptor(self.get_system_name())

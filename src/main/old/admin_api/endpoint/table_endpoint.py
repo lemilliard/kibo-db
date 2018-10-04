@@ -1,11 +1,11 @@
-from src.main.common.model import endpoint
+from src.main.old.common.model import endpoint
 
 
 class TableEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_get(cls, *args, **kwargs):
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
 
         db_system_name = kwargs.get("db_system_name")
         tb_system_name = kwargs.get("tb_system_name", None)
@@ -24,8 +24,8 @@ class TableEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_post(cls, *args, **kwargs):
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
-        from src.main.admin_api.model.table import Table
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.model.table import Table
 
         db_system_name = kwargs.get("db_system_name")
         response = None
@@ -40,7 +40,7 @@ class TableEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_put(cls, *args, **kwargs):
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
 
         db_system_name = kwargs.get("db_system_name")
         tb_system_name = kwargs.get("tb_system_name")
@@ -64,7 +64,7 @@ class TableEndpoint(endpoint.Endpoint):
 
     @classmethod
     def do_delete(cls, *args, **kwargs):
-        from src.main.admin_api.utils.descriptor_utils import DescriptorUtils
+        from src.main.old.admin_api.utils.descriptor_utils import DescriptorUtils
 
         db_system_name = kwargs.get("db_system_name")
         tb_system_name = kwargs.get("tb_system_name")

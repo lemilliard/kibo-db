@@ -4,7 +4,7 @@ import unittest
 class TestCleanerUtils(unittest.TestCase):
 
     def setUp(self):
-        from src.main.common.utils.cleaner_utils import CleanerUtils
+        from src.main.old.common.utils.cleaner_utils import CleanerUtils
 
         self.cleaner_utils = CleanerUtils
 

@@ -13,7 +13,7 @@ class FileUtils(object):
     @staticmethod
     def does_root_dir_exist() -> bool:
         import os
-        from src.main.config import active_config
+        from src.main.old.config import active_config
         return os.path.isdir(active_config.files_directory)
 
     @staticmethod
