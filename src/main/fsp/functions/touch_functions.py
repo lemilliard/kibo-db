@@ -1,6 +1,6 @@
 def update_file(file):
-    pass
+    return 'update_file'
 
 
 def delete_file(file):
-    pass
+    return 'delete_file'

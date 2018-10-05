@@ -1,29 +1,30 @@
 def execute(request):
     (url, body) = split_request(request)
     (content, details) = split_body(body)
-    ss1_result = sous_step_1(content, details)
+    splitted_url = split_url(url)
+    verb = splitted_url.__getitem__(0)
+    ss1_result = sous_step_1(verb, content, details)
 
     for ss1 in ss1_result:
         (object_or_schema, condition) = ss1
-        (path, routes) = sous_step_2(url, condition)
-        print(path, routes)
+        (path, routes) = sous_step_2(splitted_url, condition)
+        (route_function, init_function, touch_function, next_function) = routes
 
-    # params = {}
-    # if obj is not None:
-    #     params['object'] = obj
-    # if schema is not None:
-    #     params['schema'] = schema
-    # if condition is not None:
-    #     params['condition'] = condition
-    # if path is not None:
-    #     params['path'] = path
-    # if routes is not None:
-    #     (route_function, init_function, touch_function, next_function) = routes
-    #     params['init_function'] = init_function
-    #     params['touch_function'] = touch_function
-    #     params['next_function'] = next_function
-    #     print(routes)
-    #     return route_function(**params)
+        params = {
+            'object_or_schema': object_or_schema,
+            'path': path,
+            'init_function': init_function,
+            'touch_function': touch_function,
+            'next_function': next_function
+        }
+
+        ids = condition.get('ids', None)
+        if ids is not None and len(ids) > 0:
+            params['ids'] = ids
+        else:
+            params['condition'] = condition
+
+        yield route_function(**params)
     return False
 
 
@@ -40,16 +41,22 @@ def split_url(url):
     return url_parts[0], url_parts[1], url_parts[2]
 
 
-def sous_step_1(content, details):
+def sous_step_1(verb, content, details):
     if (content is not None) ^ (details is not None):
         if content is not None:
-            if isinstance(content, list):
-                for c in content:
-                    yield get_object(c), get_condition(c)
+            if verb in ['create', 'update', 'delete']:
+                if isinstance(content, list):
+                    for c in content:
+                        yield get_object(c), get_condition(c)
+                else:
+                    yield get_object(content), get_condition(content)
             else:
-                yield get_object(content), get_condition(content)
-        else:
+                raise Exception('')
+        elif verb == 'read':
             yield get_schema(details), get_condition(details)
+        else:
+            # erreur
+            pass
     else:
         # erreur
         pass
@@ -71,8 +78,8 @@ def get_path(database, table):
     return database + '/' + table
 
 
-def sous_step_2(url, condition):
-    (verb, database, table) = split_url(url)
+def sous_step_2(splitted_url, condition):
+    (verb, database, table) = splitted_url
     return get_path(database, table), define_routes(verb, condition)
 
 
@@ -84,8 +91,8 @@ def define_routes(verb, condition):
         from src.main.fsp.steps import get_objects_data_step
         init_function = get_objects_data_step.execute
     else:
-        from src.main.fsp.steps import find_by_index_step
-        init_function = find_by_index_step.execute
+        from src.main.fsp.steps import get_by_condition_step
+        init_function = get_by_condition_step.execute
 
     if verb == 'read':
         routes = (init_function, None, None, None)
@@ -109,7 +116,7 @@ def define_routes(verb, condition):
 
 
 req = {
-    'url': 'read/kibo_cloud/user',
+    'url': 'delete/kibo_cloud/user',
     'body': {
         "content": [
             {"object": {}, "condition": {"ids": [1]}},
@@ -120,4 +127,7 @@ req = {
     }
 }
 
-execute(req)
+result = execute(req)
+
+for r in result:
+    print(r)

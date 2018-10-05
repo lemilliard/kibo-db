@@ -1,5 +1,4 @@
 def execute(**params):
-    print(params)
     # _files = _function()
     # _unique_key_values = sous_step_1(_files)
     # sous_step_2(_unique_key_values)
