@@ -1,62 +1,79 @@
 def execute(request):
-    (url, body) = sous_step_1(request)
-    ss2_result = sous_step_2(url, body)
+    (url, body) = split_request(request)
+    (content, details) = split_body(body)
+    ss1_result = sous_step_1(content, details)
 
-    (obj, schema, condition, path, routes) = ss2_result
-    params = {}
-    if obj is not None:
-        params['object'] = obj
-    if schema is not None:
-        params['schema'] = schema
-    if condition is not None:
-        params['condition'] = condition
-    if path is not None:
-        params['path'] = path
-    if routes is not None:
-        (route_function, init_function, touch_function, next_function) = routes
-        params['init_function'] = init_function
-        params['touch_function'] = touch_function
-        params['next_function'] = next_function
-        return route_function(**params)
+    for ss1 in ss1_result:
+        (object_or_schema, condition) = ss1
+        (path, routes) = sous_step_2(url, condition)
+        print(path, routes)
+
+    # params = {}
+    # if obj is not None:
+    #     params['object'] = obj
+    # if schema is not None:
+    #     params['schema'] = schema
+    # if condition is not None:
+    #     params['condition'] = condition
+    # if path is not None:
+    #     params['path'] = path
+    # if routes is not None:
+    #     (route_function, init_function, touch_function, next_function) = routes
+    #     params['init_function'] = init_function
+    #     params['touch_function'] = touch_function
+    #     params['next_function'] = next_function
+    #     print(routes)
+    #     return route_function(**params)
     return False
 
 
-def sous_step_1(request):
-    return split_request(request)
-
-
 def split_request(request):
-    return 'create/kibo_cloud/user', {}
+    return request.get('url', None), request.get('body', None)
 
 
-def sous_step_2(url, body):
-    obj = get_object(body)
-    schema = get_schema(body)
-    condition = get_condition(body)
-    (verb, database, table) = split_url(url)
-    path = get_path(database, table)
-    return \
-        obj, \
-        schema, \
-        condition, \
-        path, \
-        define_routes(verb, condition)
+def split_body(body):
+    return body.get('content', None), body.get('details', None)
 
 
-def get_object(body):
-    return {}
+def split_url(url):
+    url_parts = url.split('/')
+    return url_parts[0], url_parts[1], url_parts[2]
 
 
-def get_schema(body):
-    return ''
+def sous_step_1(content, details):
+    if (content is not None) ^ (details is not None):
+        if content is not None:
+            if isinstance(content, list):
+                for c in content:
+                    yield get_object(c), get_condition(c)
+            else:
+                yield get_object(content), get_condition(content)
+        else:
+            yield get_schema(details), get_condition(details)
+    else:
+        # erreur
+        pass
 
 
-def get_condition(body):
-    return {}
+def get_object(content):
+    return content.get('object', None)
+
+
+def get_schema(details):
+    return details.get('schema', None)
+
+
+def get_condition(content_details):
+    return content_details.get('condition', None)
 
 
 def get_path(database, table):
     return database + '/' + table
+
+
+def sous_step_2(url, condition):
+    (verb, database, table) = split_url(url)
+    return get_path(database, table), define_routes(verb, condition)
 
 
 def define_routes(verb, condition):
@@ -91,9 +108,16 @@ def define_routes(verb, condition):
     return routes
 
 
-def split_url(url):
-    url_parts = url.split('/')
-    return url_parts[0], url_parts[1], url_parts[2]
+req = {
+    'url': 'read/kibo_cloud/user',
+    'body': {
+        "content": [
+            {"object": {}, "condition": {"ids": [1]}},
+            {"object": {}, "condition": {}},
+            {"object": {}, "condition": {}}
+        ],
+        # "details": {"schema": {}, "condition": {}}
+    }
+}
 
-
-execute(None)
+execute(req)
