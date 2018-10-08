@@ -5,6 +5,7 @@ def execute(request):
 
     verb = splitted_url.__getitem__(0)
     ss1_result = sous_step_1(verb, content, details)
+    render = verb == "read"
 
     for (object_or_schema, condition) in ss1_result:
         (path, routes) = sous_step_2(splitted_url, condition)
@@ -15,7 +16,8 @@ def execute(request):
             "path": path,
             "init_function": init_function,
             "touch_function": touch_function,
-            "next_function": next_function
+            "next_function": next_function,
+            "render": render
         }
 
         ids = condition.get("ids", None)
@@ -73,7 +75,7 @@ def get_condition(content_details):
 
 
 def get_path(database, table):
-    return database + "/" + table
+    return "../../../../databases/" + database + "/" + table + "/data"
 
 
 def sous_step_2(splitted_url, condition):
@@ -114,14 +116,14 @@ def define_routes(verb, condition):
 
 
 req = {
-    "url": "update/kibo_cloud/user",
+    "url": "read/test/user",
     "body": {
-        "content": [
-            {"object": {}, "condition": {"ids": [1]}},
-            {"object": {}, "condition": {}},
-            {"object": {}, "condition": {}}
-        ],
-        # "details": {"schema": {}, "condition": {}}
+        # "content": [
+        #     {"object": {}, "condition": {"ids": [1]}},
+        #     {"object": {}, "condition": {}},
+        #     {"object": {}, "condition": {}}
+        # ],
+        "details": {"schema": "{id, first_name}", "condition": {"ids": [1, 2, 3, 4]}}
     }
 }
 
