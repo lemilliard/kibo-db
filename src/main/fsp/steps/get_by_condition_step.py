@@ -1,2 +1,2 @@
 def execute(**params):
-    return 'find_by_index'
+    return "find_by_index"
