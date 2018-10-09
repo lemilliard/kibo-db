@@ -7,9 +7,11 @@ def delete_indexes(file):
 
 def find_index_file(cond, path):
     import os
-    function_operator = equal_operator
+    function_operator = None
     operator = cond["operator"]
-    if operator == ">":
+    if operator == "=":
+        function_operator = equal_operator
+    elif operator == ">":
         function_operator = superior_operator
     elif operator == "<":
         function_operator = inferior_operator
@@ -17,15 +19,17 @@ def find_index_file(cond, path):
         function_operator = inferior_or_equal_operator
     elif operator == ">=":
         function_operator = superior_or_equal_operator
-    file_list = os.listdir(path)
-    for file in file_list:
-        part_name = file.split('-')
-        if file.endswith('.json'):
-            if function_operator(part_name, cond["value"]):
-                yield file
-        else:
-            if function_operator(part_name, cond["value"]):
-                yield from find_index_file(cond, path + "/" + file)
+
+    if function_operator != None:
+        file_list = os.listdir(path)
+        for file in file_list:
+            part_name = file.split('-')
+            if file.endswith('.json'):
+                if function_operator(part_name, cond["value"]):
+                    yield file
+            else:
+                if function_operator(part_name, cond["value"]):
+                    yield from find_index_file(cond, path + "/" + file)
 
 def equal_operator(part_name, cond_value):
     if len(part_name) > 1 and part_name[0] < cond_value < part_name[1]:
@@ -59,7 +63,7 @@ def inferior_or_equal_operator(part_name, cond_value):
 params = {
     "path": "../../../../databases",
     "value": "brioche",
-    "operator": ">"
+    "operator": "="
 }
 result = find_index_file(params, "../../../../databases")
 for i in result:
