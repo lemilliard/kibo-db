@@ -20,17 +20,13 @@ def get_file_by_id(path, object_id):
 
 
 def render_json(files, schema):
+    from src.main.fsp.json_loader import json_loader
     json = ""
     for (index, file) in enumerate(files):
         try:
-            with open(file) as f:
-                content = f.read()
-                content = content.replace(" ", "")
-                content = content.replace("\r\n", "")
-                content = content.replace("\n", "")
-                if index > 0:
-                    json += ","
-                json += content
+            if index > 0:
+                json += ","
+            json += json_loader.load(file, schema)
         except IOError:
             pass
     return json

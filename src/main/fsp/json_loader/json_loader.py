@@ -3,11 +3,17 @@ def load(path, schema):
 
     with open(path) as f:
         content = f.read()
-        process_content(content)
+        json += process_content(content, schema)
+
+    return json
 
 
-def process_content(content):
-    verif_content(content)
+def process_content(content, schema):
+    import re
+
+    (open_tag, close_tag) = verif_content(content)
+
+    json = open_tag
 
     key_opened = False
     value_opened = False
@@ -53,9 +59,16 @@ def process_content(content):
                 elif is_closing_object and count_objects > 0:
                     count_objects -= 1
                 else:
-                    print(current_key, current_value)
-                    if "{" in current_value:
-                        process_content(current_value)
+                    if is_key_valid(current_key, schema):
+                        json += "\"" + current_key + "\":"
+                        if "{" in current_value:
+                            sous_schema = re.search("{[^>]+}", schema[1:-1])
+                            if sous_schema is not None:
+                                sous_schema = sous_schema.group()
+                                json += process_content(current_value, sous_schema)
+                        else:
+                            json += current_value
+                        json += ","
                     value_opened = False
                     current_key = ""
             elif value_type == "str" and c == "\\":
@@ -72,6 +85,23 @@ def process_content(content):
             elif c == ":":
                 value_type = None
                 waiting_value = True
+            elif c in ["{", "}"]:
+                json += c
+    if json.endswith(","):
+        json = json[:-1]
+    json += close_tag
+    return json
+
+
+def is_key_valid(key, schema):
+    import re
+    schema = schema.replace(" ", "")
+    if schema.startswith("{"):
+        schema = schema[1:]
+    if schema.endswith("}"):
+        schema = schema[:-1]
+    schema = re.sub("{[^>]+}", "", schema)
+    return schema.__contains__(key)
 
 
 def verif_content(content):
@@ -79,6 +109,8 @@ def verif_content(content):
         raise Exception("Le premier caractère est invalide")
     elif content[len(content) - 1] not in ["}", "]"]:
         raise Exception("Le dernier caractère est invalide")
+    else:
+        return content[0], content[len(content) - 1]
 
 
 def get_value_type(char):
@@ -90,8 +122,3 @@ def get_value_type(char):
         return "obj"
     else:
         return "num"
-
-
-schema = "{id_user,first_name}"
-
-load("../../../../databases/test/user/data/1.json", schema)
