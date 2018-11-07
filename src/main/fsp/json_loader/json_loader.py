@@ -101,13 +101,13 @@ def process_content(content, schema):
 
 def is_key_valid(key, schema):
     import re
-    schema = schema.replace(" ", "")
-    if schema.startswith("{"):
-        schema = schema[1:]
-    if schema.endswith("}"):
-        schema = schema[:-1]
-    schema = re.sub("{(.*)}", "", schema)
-    return schema.__contains__(key)
+    s = schema.replace(" ", "")
+    if s.startswith("{"):
+        s = s[1:]
+    if s.endswith("}"):
+        s = s[:-1]
+    s = re.sub("{(.*)}", "", s)
+    return s.__contains__(key)
 
 
 def verif_content(content):
