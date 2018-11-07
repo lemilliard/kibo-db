@@ -21,12 +21,11 @@ def get_file_by_id(path, object_id):
 
 def render_json(files, schema):
     from src.main.fsp.json_loader import json_loader
-    json = ""
+    json = "["
     for (index, file) in enumerate(files):
         try:
-            if index > 0:
-                json += ","
-            json += json_loader.load(file, schema)
+            json += json_loader.load(file, schema) + ","
         except IOError:
             pass
+    json = json[:-1] + "]"
     return json

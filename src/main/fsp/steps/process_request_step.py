@@ -123,7 +123,7 @@ req = {
         #     {"object": {}, "condition": {}},
         #     {"object": {}, "condition": {}}
         # ],
-        "details": {"schema": "{liste_objets: {id, test}}", "condition": {"ids": [1]}}
+        "details": {"schema": "{sous_objet: {id, liste_objets: {id, test}, sous_objet: {id}}}", "condition": {"ids": [3]}}
     }
 }
 

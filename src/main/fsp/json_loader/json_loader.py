@@ -60,15 +60,23 @@ def process_content(content, schema):
                     count_objects -= 1
                 else:
                     if is_key_valid(current_key, schema):
-                        json += "\"" + current_key + "\":"
                         if "{" in current_value:
-                            sous_schema = re.search("{[^>]+}", schema[1:-1])
+                            sous_schema = re.search("{(.*)}", schema[1:-1])
                             if sous_schema is not None:
+                                json += "\"" + current_key + "\":"
                                 sous_schema = sous_schema.group()
-                                json += process_content(current_value, sous_schema)
+                                if value_type == "arr":
+                                    json += "["
+                                    for sub_value in re.findall("{(.*)}", current_value):
+                                        sub_value = "{" + sub_value + "}"
+                                        json += process_content(sub_value, sous_schema) + ","
+                                    json = json[:-1]
+                                    json += "]"
+                                else:
+                                    json += process_content(current_value, sous_schema)
+                                json += ","
                         else:
-                            json += current_value
-                        json += ","
+                            json += "\"" + current_key + "\":" + current_value + ","
                     value_opened = False
                     current_key = ""
             elif value_type == "str" and c == "\\":
@@ -85,8 +93,6 @@ def process_content(content, schema):
             elif c == ":":
                 value_type = None
                 waiting_value = True
-            elif c in ["{", "}"]:
-                json += c
     if json.endswith(","):
         json = json[:-1]
     json += close_tag
@@ -100,7 +106,7 @@ def is_key_valid(key, schema):
         schema = schema[1:]
     if schema.endswith("}"):
         schema = schema[:-1]
-    schema = re.sub("{[^>]+}", "", schema)
+    schema = re.sub("{(.*)}", "", schema)
     return schema.__contains__(key)
 
 
