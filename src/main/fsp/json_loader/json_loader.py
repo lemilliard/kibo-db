@@ -61,20 +61,18 @@ def process_content(content, schema):
                 else:
                     if is_key_valid(current_key, schema):
                         if "{" in current_value:
-                            sous_schema = re.search("{(.*)}", schema[1:-1])
-                            if sous_schema is not None:
-                                json += "\"" + current_key + "\":"
-                                sous_schema = sous_schema.group()
-                                if value_type == "arr":
-                                    json += "["
-                                    for sub_value in re.findall("{(.*)}", current_value):
-                                        sub_value = "{" + sub_value + "}"
-                                        json += process_content(sub_value, sous_schema) + ","
-                                    json = json[:-1]
-                                    json += "]"
-                                else:
-                                    json += process_content(current_value, sous_schema)
-                                json += ","
+                            sous_schema = get_sous_schema(schema, current_key)
+                            json += "\"" + current_key + "\":"
+                            if value_type == "arr":
+                                json += "["
+                                for sub_value in re.findall("{(.*?)}", current_value):
+                                    sub_value = "{" + sub_value + "}"
+                                    json += process_content(sub_value, sous_schema) + ","
+                                json = json[:-1]
+                                json += "]"
+                            else:
+                                json += process_content(current_value, sous_schema)
+                            json += ","
                         else:
                             json += "\"" + current_key + "\":" + current_value + ","
                     value_opened = False
@@ -106,7 +104,7 @@ def is_key_valid(key, schema):
         s = s[1:]
     if s.endswith("}"):
         s = s[:-1]
-    s = re.sub("{(.*)}", "", s)
+    s = re.sub("{.*?}", "", s)
     return s.__contains__(key)
 
 
@@ -128,3 +126,25 @@ def get_value_type(char):
         return "obj"
     else:
         return "num"
+
+
+def get_sous_schema(schema, key):
+    cpt = 0
+    sous_schema = ""
+    in_object = False
+    i = 1
+    while i in range(1, schema.__len__() - 1):
+        c = schema[i]
+        if c == "{":
+            in_object = True
+            cpt += 1
+        elif c == "}":
+            cpt -= 1
+        if in_object:
+            sous_schema += c
+            if cpt == 0:
+                i = schema.__len__()
+        i += 1
+    if cpt != 0:
+        raise Exception("Sous schema invalide!!", sous_schema)
+    return sous_schema
