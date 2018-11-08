@@ -1,6 +1,7 @@
 import queue
 
-q = queue.Queue()
+files_queue = queue.Queue()
+
 
 def execute(**params):
     import threading
@@ -13,34 +14,31 @@ def execute(**params):
     files = []
 
     if not object_ids:
-        files = get_files(path)
+        thread_files = threading.Thread(target=get_files, args=(path,))
+        thread_files.start()
     else:
-        thread_verif = threading.Thread(verif(path, object_ids))
+        thread_verif = threading.Thread(target=verif, args=(path, object_ids))
         thread_verif.start()
-        thread_verif.join()
 
     if render:
-        if not object_ids:
-            return render_json(files, schema)
-        else:
-            render_queue = queue.Queue()
-            thread_render = threading.Thread(try_render_json(schema, render_queue))
-            thread_render.start()
-            thread_render.join()
-            return render_queue.get()
+        render_queue = queue.Queue()
+        thread_render = threading.Thread(target=render_json, args=(schema, render_queue))
+        thread_render.start()
+
+        thread_render.join()
+        return render_queue.get()
 
     return files
 
+
 def verif(path, object_ids):
     import os.path
-    global q
-    for object_id in object_ids:
+    global files_queue
+    for (index, object_id) in enumerate(object_ids):
         s = get_file_by_id(path, object_id)
         if os.path.isfile(s):
-            q.put(s)
-            print(s)
-    q.put(None)
-
+            files_queue.put(s)
+    files_queue.put(None)
 
 
 def get_file_by_id(path, object_id):
@@ -49,34 +47,20 @@ def get_file_by_id(path, object_id):
 
 def get_files(path):
     import os
-    return [path + "/" + file_name for file_name in os.listdir(path)]
+    global files_queue
+    [files_queue.put(path + "/" + file_name) for file_name in os.listdir(path)]
+    files_queue.put(None)
 
 
-def render_json(files, schema):
+def render_json(schema, result_queue):
     from src.main.fsp.json_loader import json_loader
+    global files_queue
     json = "["
     loader = json_loader.load if schema is None else json_loader.load_with_schema
-    for file in files:
-        json += loader(path=file, schema=schema) + ","
-    if len(json) > 1:
-        json = json[:-1]
-    json += "]"
-    return json
-
-
-def try_render_json(schema, result_queue):
-    from src.main.fsp.json_loader import json_loader
-    global q
-    json = "["
-    loader = json_loader.load if schema is None else json_loader.load_with_schema
-    file = q.get()
+    file = files_queue.get()
     while file is not None:
-        print(file)
-        try:
-            json += loader(path=file, schema=schema) + ","
-        except IOError:
-            pass
-        file = q.get()
+        json += loader(path=file, schema=schema) + ","
+        file = files_queue.get()
     if len(json) > 1:
         json = json[:-1]
     json += "]"

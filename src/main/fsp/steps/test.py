@@ -107,9 +107,9 @@ def get_sous_schema(schema, key):
 def is_key_valid(key, s):
     return s.__contains__(key)
 
-q = queue.Queue()
+files_queue = queue.Queue()
 def feed_queue():
-    global q
+    global files_queue
     q.put(0)
     q.put(1)
     q.put(2)
@@ -122,7 +122,7 @@ def feed_queue():
     q.put(None)
 
 def consume_queue():
-    global q
+    global files_queue
     c = q.get()
     while c is not None:
         print(c)

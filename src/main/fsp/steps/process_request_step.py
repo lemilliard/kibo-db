@@ -134,7 +134,7 @@ req = {
                               "liste_objets: {id,sous_objet: {id}}, "
                               "sous_objet: {id}"
                               "}"
-                              "}", "condition": {"ids": [3]}}
+                              "}"}
     }
 }
 
