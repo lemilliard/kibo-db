@@ -1,5 +1,7 @@
 import re
-
+import queue
+import time
+import threading
 # string = "{sous_objet: {id1, liste_objets: {id2, test}, sous_objet: {id3}}}"
 string = "{id1, liste_objets: {id2, test: {id5}}, sous_objet: {id3, sous_objet: {id4}}}"
 
@@ -105,9 +107,39 @@ def get_sous_schema(schema, key):
 def is_key_valid(key, s):
     return s.__contains__(key)
 
-s = get_sous_schema(string, "liste_objets")
-print(s)
-s = get_sous_schema(string, "sous_objet")
-print(s)
+q = queue.Queue()
+def feed_queue():
+    global q
+    q.put(0)
+    q.put(1)
+    q.put(2)
+    q.put(3)
+    q.put(4)
+    for i in range(5, 10):
+        time.sleep(1)
+        print("sleep")
+        q.put(i)
+    q.put(None)
 
-print(is_key_valid("sous_objet", s[1]))
+def consume_queue():
+    global q
+    c = q.get()
+    while c is not None:
+        print(c)
+        c = q.get()
+
+# s = get_sous_schema(string, "liste_objets")
+# print(s)
+# s = get_sous_schema(string, "sous_objet")
+# print(s)
+#
+# print(is_key_valid("sous_objet", s[1]))
+
+
+threads = []
+for func in [feed_queue, consume_queue]:
+    threads.append(threading.Thread(target=func))
+    threads[-1].start()
+
+for thread in threads:
+    thread.join()
