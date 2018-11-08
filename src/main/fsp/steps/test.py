@@ -1,7 +1,7 @@
 import re
 
 # string = "{sous_objet: {id1, liste_objets: {id2, test}, sous_objet: {id3}}}"
-string = "{id1, liste_objets: {id2, test: {id5}}, sous_objet: {id3}}"
+string = "{id1, liste_objets: {id2, test: {id5}}, sous_objet: {id3, sous_objet: {id4}}}"
 
 
 # search = re.search("{.*}", string[1:-1])
@@ -42,12 +42,14 @@ string = "{id1, liste_objets: {id2, test: {id5}}, sous_objet: {id3}}"
 
 def get_sous_schema(schema, key):
     cpt = 0
+    tmp_sous_schema = ""
     sous_schema = ""
     in_object = False
     in_key = False
     tmp_key = ""
     i = 1
-    while i in range(1, schema.__len__() - 1):
+    keys = []
+    while i in range(1, schema.__len__()):
         c = schema[i]
         if c == "{":
             in_object = True
@@ -55,17 +57,20 @@ def get_sous_schema(schema, key):
         elif c == "}":
             cpt -= 1
         if in_object:
-            sous_schema += c
+            tmp_sous_schema += c
             if cpt == 0:
                 if key == tmp_key:
-                    i = schema.__len__()
-                else:
-                    in_object = False
-                    in_key = False
-                    sous_schema = ""
-                    tmp_key = ""
+                    sous_schema = tmp_sous_schema
+
+                keys.append(tmp_key)
+                in_object = False
+                in_key = False
+                tmp_sous_schema = ""
+                tmp_key = ""
         else:
-            if c in [",", " "] and not in_key:
+            if (c in [",", " "] or i == schema.__len__() - 1) and not in_key:
+                if not in_object and tmp_key != "":
+                    keys.append(tmp_key)
                 tmp_key = ""
             else:
                 if c == ":":
@@ -73,7 +78,7 @@ def get_sous_schema(schema, key):
                 if not in_key:
                     tmp_key += c
         i += 1
-    return sous_schema
+    return sous_schema, keys
 
 # def get_sous_schema(schema):
 #     cpt = 0
@@ -97,6 +102,12 @@ def get_sous_schema(schema, key):
 #
 # print(get_sous_schema(string))
 
+def is_key_valid(key, s):
+    return s.__contains__(key)
 
-# print(get_sous_schema(string, "liste_objets"))
-print(get_sous_schema(string, "sous_objet"))
+s = get_sous_schema(string, "liste_objets")
+print(s)
+s = get_sous_schema(string, "sous_objet")
+print(s)
+
+print(is_key_valid("sous_objet", s[1]))
