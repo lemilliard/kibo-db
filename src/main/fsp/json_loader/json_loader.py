@@ -1,10 +1,20 @@
-def load(path, schema):
+def load_with_schema(**args):
+    path = args.get("path")
+    schema = args.get("schema")
+
     json = ""
 
     with open(path) as f:
         content = f.read()
         json += process_content(content, schema)
 
+    return json
+
+
+def load(**args):
+    path = args.get("path")
+    with open(path) as f:
+        json = f.read()
     return json
 
 
@@ -59,9 +69,9 @@ def process_content(content, schema):
                 elif is_closing_object and count_objects > 0:
                     count_objects -= 1
                 else:
-                    if is_key_valid(current_key, schema):
+                    (sous_schema, keys) = get_sous_schema(schema, current_key)
+                    if keys.__contains__(current_key):
                         if "{" in current_value:
-                            sous_schema = get_sous_schema(schema, current_key)
                             json += "\"" + current_key + "\":"
                             if value_type == "arr":
                                 json += "["
@@ -98,14 +108,7 @@ def process_content(content, schema):
 
 
 def is_key_valid(key, schema):
-    import re
-    s = schema.replace(" ", "")
-    if s.startswith("{"):
-        s = s[1:]
-    if s.endswith("}"):
-        s = s[:-1]
-    s = re.sub("{.*?}", "", s)
-    return s.__contains__(key)
+    return schema.__contains__(key)
 
 
 def verif_content(content):
@@ -130,10 +133,14 @@ def get_value_type(char):
 
 def get_sous_schema(schema, key):
     cpt = 0
+    tmp_sous_schema = ""
     sous_schema = ""
     in_object = False
+    in_key = False
+    tmp_key = ""
     i = 1
-    while i in range(1, schema.__len__() - 1):
+    keys = []
+    while i in range(1, schema.__len__()):
         c = schema[i]
         if c == "{":
             in_object = True
@@ -141,10 +148,25 @@ def get_sous_schema(schema, key):
         elif c == "}":
             cpt -= 1
         if in_object:
-            sous_schema += c
+            tmp_sous_schema += c
             if cpt == 0:
-                i = schema.__len__()
+                if key == tmp_key:
+                    sous_schema = tmp_sous_schema
+
+                keys.append(tmp_key)
+                in_object = False
+                in_key = False
+                tmp_sous_schema = ""
+                tmp_key = ""
+        else:
+            if (c in [",", " "] or i == schema.__len__() - 1) and not in_key:
+                if not in_object and tmp_key != "":
+                    keys.append(tmp_key)
+                tmp_key = ""
+            else:
+                if c == ":":
+                    in_key = True
+                if not in_key:
+                    tmp_key += c
         i += 1
-    if cpt != 0:
-        raise Exception("Sous schema invalide!!", sous_schema)
-    return sous_schema
+    return sous_schema, keys

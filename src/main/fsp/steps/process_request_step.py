@@ -20,11 +20,12 @@ def execute(request):
             "render": render
         }
 
-        ids = condition.get("ids", None)
-        if ids is not None and len(ids) > 0:
-            params["ids"] = ids
-        else:
-            params["condition"] = condition
+        if condition is not None:
+            ids = condition.get("ids", None)
+            if ids is not None and len(ids) > 0:
+                params["ids"] = ids
+            else:
+                params["condition"] = condition
 
         yield route_function(**params)
     return False
@@ -85,9 +86,11 @@ def sous_step_2(splitted_url, condition):
 
 def define_routes(verb, condition):
     routes = (None, None, None, None)
-    ids = condition.get("ids", None)
-    is_by_id = ids is not None and len(ids) > 0
-    if is_by_id:
+    is_by_id = False
+    if condition is not None:
+        ids = condition.get("ids", None)
+        is_by_id = ids is not None and len(ids) > 0
+    if is_by_id or condition is None:
         from src.main.fsp.steps import get_objects_data_step
         init_function = get_objects_data_step.execute
     else:
@@ -128,7 +131,7 @@ req = {
                               "sous_objet: "
                               "{"
                               "id, "
-                              "liste_objets1: {id}, "
+                              "liste_objets: {id,sous_objet: {id}}, "
                               "sous_objet: {id}"
                               "}"
                               "}", "condition": {"ids": [3]}}
