@@ -1,10 +1,5 @@
-import queue
-
-files_queue = queue.Queue()
-
-
 def execute(**params):
-    import threading
+    from multiprocessing import Process, Queue
 
     path = params.get("path", "")
     object_ids = params.get("ids", [])
@@ -13,27 +8,26 @@ def execute(**params):
 
     files = []
 
+    files_queue = Queue()
     if not object_ids:
-        thread_files = threading.Thread(target=get_files, args=(path,))
+        thread_files = Process(target=get_files, args=(path, files_queue))
         thread_files.start()
     else:
-        thread_verif = threading.Thread(target=verif, args=(path, object_ids))
+        thread_verif = Process(target=verif, args=(path, object_ids, files_queue))
         thread_verif.start()
 
     if render:
-        render_queue = queue.Queue()
-        thread_render = threading.Thread(target=render_json, args=(schema, render_queue))
+        render_queue = Queue()
+        thread_render = Process(target=render_json, args=(schema, files_queue, render_queue))
         thread_render.start()
 
-        thread_render.join()
         return render_queue.get()
 
     return files
 
 
-def verif(path, object_ids):
+def verif(path, object_ids, files_queue):
     import os.path
-    global files_queue
     for (index, object_id) in enumerate(object_ids):
         s = get_file_by_id(path, object_id)
         if os.path.isfile(s):
@@ -45,16 +39,14 @@ def get_file_by_id(path, object_id):
     return path + "/" + str(object_id) + ".json"
 
 
-def get_files(path):
+def get_files(path, files_queue):
     import os
-    global files_queue
     [files_queue.put(path + "/" + file_name) for file_name in os.listdir(path)]
     files_queue.put(None)
 
 
-def render_json(schema, result_queue):
+def render_json(schema, files_queue, render_queue):
     from src.main.fsp.json_loader import json_loader
-    global files_queue
     json = "["
     loader = json_loader.load if schema is None else json_loader.load_with_schema
     file = files_queue.get()
@@ -64,4 +56,4 @@ def render_json(schema, result_queue):
     if len(json) > 1:
         json = json[:-1]
     json += "]"
-    result_queue.put(json)
+    render_queue.put(json)

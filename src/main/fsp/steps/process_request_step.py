@@ -138,7 +138,7 @@ req = {
     }
 }
 
-result = execute(req)
-
-for r in result:
-    print(r)
+if __name__ == "__main__":
+    result = execute(req)
+    for r in result:
+        print(r)
